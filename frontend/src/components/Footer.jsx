@@ -31,18 +31,12 @@ const Footer = () => {
                     <div className="flex flex-col md:flex-row md:justify-between">
                         {/* Logo and Company Info */}
                         <div className="mb-8 md:mb-0">
-                            <Link to="/" className="inline-block">
-                                <div className="flex items-center">
-                                    <div className="h-10 w-10 mr-2">
-                                        <svg viewBox="0 0 100 100" className="h-full w-full" fill="currentColor">
-                                            <path d="M25,30 L75,30 L75,20 L25,20 Z" />
-                                            <path d="M25,50 L75,50 L75,40 L25,40 Z" />
-                                            <path d="M25,70 L75,70 L75,60 L25,60 Z" />
-                                            <path d="M20,80 L80,80 L80,10 L20,10 Z" fill="none" stroke="currentColor" strokeWidth="8" />
-                                        </svg>
-                                    </div>
-                                    <span className="font-bold text-xl text-gray-900">BookShop</span>
-                                </div>
+                            <Link to="/" className="flex items-center">
+                                <img
+                                    className="h-6 w-auto"  
+                                    src="/images/Logo.svg"
+                                    alt="BookShop Logo"
+                                />
                             </Link>
                         </div>
 
