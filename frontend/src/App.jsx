@@ -7,6 +7,13 @@ import Wishlist from './pages/Wishlist';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Cart from './pages/Cart';
+import ProfileLayout from './layouts/ProfileLayout';
+import ProfilePage from './pages/profile/ProfilePage';
+import RentedBooks from './pages/profile/RentedBooks';
+import BookedBooks from './pages/profile/BookedBooks';
+import SavedBooks from './pages/profile/SavedBooks';
+import BooksHistory from './pages/profile/BookHistory';
+
 
 
 // Component that conditionally renders Navbar and Footer
@@ -25,7 +32,16 @@ const AppLayout = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/cart" element={<Cart />} />
-         
+
+          {/* Profile routes */}
+          <Route path="/profile" element={<ProfileLayout />}>
+            <Route index element={<ProfilePage />} />
+            <Route path="rented" element={<RentedBooks />} />
+            <Route path="booked" element={<BookedBooks />} />
+            <Route path="saved" element={<SavedBooks />} />
+
+            <Route path="history" element={<BooksHistory/>} />
+          </Route>
 
           {/* Static */}
           <Route path="/about" element={<div className="max-w-7xl mx-auto px-4 py-8">About Page Coming Soon</div>} />
