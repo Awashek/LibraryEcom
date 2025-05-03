@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Pagination from '../../components/Pagination';
+import Pagination from '../../components/common/Pagination';
 
-const SavedBooks = () => {
+const SavedBooksPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const booksPerPage = 5;
   
@@ -50,7 +50,7 @@ const SavedBooks = () => {
   };
 
   return (
-    <div>
+    <div className='pl-6'>
       <h1 className="text-5xl font-bold mb-6 p-8">Saved Books</h1>
 
       <div className="w-full pl-8">
@@ -92,4 +92,4 @@ const SavedBooks = () => {
   );
 };
 
-export default SavedBooks;
+export default SavedBooksPage;

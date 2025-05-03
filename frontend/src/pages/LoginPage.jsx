@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import BackButton from "../components/BackButton";
 
-export default function Login() {
+export default function LoginPage() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -20,17 +19,17 @@ export default function Login() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-cover bg-center"
             style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')`,
+                backgroundImage: `url("/images/bg.png")`,
                 backgroundRepeat: 'no-repeat',
-                backgroundSize: 'cover'
+                backgroundSize: '100%'
+
             }}>
-            {/* Updated container with rounded-lg for subtle curves */}
-            <div className="bg-white overflow-hidden max-w-2xl w-full p-12 shadow-xl rounded-lg relative">
-                {/* Curved white overlay - removed the rounded-full as we're using rounded-lg on parent */}
-                <div className="absolute inset-0 z-0 bg-white"></div>
+            <div className=" mb-48 overflow-hidden max-w-2xl w-full p-12 relative">
+                {/* Curved white overlay */}
+                <div className="absolute inset-0 z-0 rounded-full bg-white"></div>
+
                 {/* Content */}
                 <div className="relative z-10">
-                <BackButton />
                     <h2 className="text-2xl font-bold mb-1">Hello there,</h2>
                     <h1 className="text-3xl font-bold mb-6">Welcome to Bookish</h1>
 
@@ -94,6 +93,7 @@ export default function Login() {
                                     Login
                                 </button>
                             </div>
+
                             <div className="text-center text-sm text-gray-600">
                                 Don't have an account? <Link to="/register" className="font-medium hover:underline cursor-pointer">Sign Up</Link>
                             </div>

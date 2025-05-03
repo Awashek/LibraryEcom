@@ -2,17 +2,19 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { Fragment } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import Home from './pages/Home';
-import Wishlist from './pages/Wishlist';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Cart from './pages/Cart';
+import HomePage from './pages/HomePage';
+import WishlistPage from './pages/WishlistPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import CartPage from './pages/CartPage';
 import ProfileLayout from './layouts/ProfileLayout';
 import ProfilePage from './pages/profile/ProfilePage';
-import RentedBooks from './pages/profile/RentedBooks';
-import BookedBooks from './pages/profile/BookedBooks';
-import SavedBooks from './pages/profile/SavedBooks';
-import BooksHistory from './pages/profile/BookHistory';
+import RentedBooksPage from './pages/profile/RentedBooksPage';
+import BookedBooksPage from './pages/profile/BookedBooksPage';
+import SavedBooksPage from './pages/profile/SavedBooksPage';
+import BookHistoryPage from './pages/profile/BookHistoryPage';
+import BookDetails from './pages/BookDetails';
+
 
 
 
@@ -27,20 +29,20 @@ const AppLayout = () => {
       {!isAuthPage && <Navbar />}
       <main className={`flex-grow ${!isAuthPage ? 'pt-16' : ''}`}>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/cart" element={<Cart />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/wishlist" element={<WishlistPage />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path='/bookdetails' element={<BookDetails />} />
 
           {/* Profile routes */}
           <Route path="/profile" element={<ProfileLayout />}>
             <Route index element={<ProfilePage />} />
-            <Route path="rented" element={<RentedBooks />} />
-            <Route path="booked" element={<BookedBooks />} />
-            <Route path="saved" element={<SavedBooks />} />
-
-            <Route path="history" element={<BooksHistory/>} />
+            <Route path="rented" element={<RentedBooksPage />} />
+            <Route path="booked" element={<BookedBooksPage />} />
+            <Route path="saved" element={<SavedBooksPage />} />
+            <Route path="history" element={<BookHistoryPage/>} />
           </Route>
 
           {/* Static */}

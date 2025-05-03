@@ -2,7 +2,7 @@ import React from 'react';
 
 const ProfilePage = () => {
     return (
-        <div>
+        <div className='pl-6'>
             <div className="flex justify-between items-center p-8">
                 <h1 className="text-5xl font-bold">Profile</h1>
                 <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center border">

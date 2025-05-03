@@ -1,77 +1,75 @@
 import React, { useState } from 'react';
-import Pagination from '../../components/Pagination';
+import Pagination from '../../components/common/Pagination';
 
-const BooksHistory = () => {
+const RentedBooksPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
-    const booksPerPage = 5; // Show 5 books per page
-
-    // Sample book history data
-    const bookHistory = [
+    const booksPerPage = 4; 
+    
+    const rentedBooks = [
         {
             id: 1,
-            title: 'The History of a Difficult Child',
+            title: 'The History of a Difficult',
             rentedDate: '22 Aug 2023',
             returnDate: '29 Aug 2023',
-            status: 'Returned'
+            status: 'Borrowed'
         },
         {
             id: 2,
             title: 'The History of a Difficult Child',
             rentedDate: '22 Aug 2023',
             returnDate: '29 Aug 2023',
-            status: 'Returned'
+            status: 'Borrowed'
         },
         {
             id: 3,
             title: 'The History of a Difficult Child',
             rentedDate: '22 Aug 2023',
             returnDate: '29 Aug 2023',
-            status: 'Returned'
+            status: 'Delayed'
         },
         {
             id: 4,
             title: 'The History of a Difficult Child',
             rentedDate: '22 Aug 2023',
             returnDate: '29 Aug 2023',
-            status: 'Returned'
+            status: 'Extended'
         },
         {
             id: 5,
             title: 'The History of a Difficult Child',
             rentedDate: '22 Aug 2023',
             returnDate: '29 Aug 2023',
-            status: 'Returned'
-        },
-        {
-            id: 6,
-            title: 'The History of a Difficult Child',
-            rentedDate: '22 Aug 2023',
-            returnDate: '29 Aug 2023',
-            status: 'Returned'
-        },
-        {
-            id: 7,
-            title: 'The History of a Difficult Child',
-            rentedDate: '22 Aug 2023',
-            returnDate: '29 Aug 2023',
-            status: 'Returned'
+            status: 'Extended'
         }
     ];
 
     // Calculate pagination
-    const totalPages = Math.ceil(bookHistory.length / booksPerPage);
+    const totalPages = Math.ceil(rentedBooks.length / booksPerPage);
     const indexOfLastBook = currentPage * booksPerPage;
     const indexOfFirstBook = indexOfLastBook - booksPerPage;
-    const currentBooks = bookHistory.slice(indexOfFirstBook, indexOfLastBook);
+    const currentBooks = rentedBooks.slice(indexOfFirstBook, indexOfLastBook);
 
     // Handle page change
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
 
+    const getStatusColor = (status) => {
+        switch (status) {
+            case 'Borrowed':
+                return 'text-green-600';
+            case 'Delayed':
+                return 'text-red-600';
+            case 'Extended':
+                return 'text-blue-600';
+            default:
+                return 'text-gray-600';
+        }
+    };
+
     return (
-        <div>
-            <h1 className="text-5xl font-bold mb-6 p-8">Books History</h1>
+        <div className='pl-6'>
+            <h1 className="text-5xl font-bold mb-8 p-8">Rented Books</h1>
 
             <div className="w-full pl-8">
                 <div className="grid grid-cols-4 mb-4">
@@ -87,7 +85,7 @@ const BooksHistory = () => {
                             <div className="text-gray-800">{book.title}</div>
                             <div className="text-gray-600">{book.rentedDate}</div>
                             <div className="text-gray-600">{book.returnDate}</div>
-                            <div className="text-gray-500">{book.status}</div>
+                            <div className={getStatusColor(book.status)}>{book.status}</div>
                         </div>
                     ))}
                 </div>
@@ -104,4 +102,4 @@ const BooksHistory = () => {
     );
 };
 
-export default BooksHistory;
+export default RentedBooksPage;

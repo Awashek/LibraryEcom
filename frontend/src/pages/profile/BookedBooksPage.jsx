@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const BookedBooks = () => {
+const BookedBooksPage = () => {
     const [bookTitle, setBookTitle] = useState('The History of a Difficult Child');
     const [rentingDate, setRentingDate] = useState('22/08/2023');
     const [dueDate, setDueDate] = useState('22/08/2023');
@@ -14,7 +14,7 @@ const BookedBooks = () => {
     };
 
     return (
-        <div>
+        <div className='pl-8'>
             <h1 className="text-5xl font-bold mb-2 p-8">Booked Books</h1>
 
             <div className="p-8">
@@ -78,4 +78,4 @@ const BookedBooks = () => {
     );
 };
 
-export default BookedBooks;
+export default BookedBooksPage;

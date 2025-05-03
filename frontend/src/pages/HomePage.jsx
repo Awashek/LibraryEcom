@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import TopSellers from '../components/TopSellers';
 import RecommendedForYou from '../components/RecommendedForYou';
-const Home = () => {
+const HomePage = () => {
     // Mock data for featured books
     const [featuredBooks, setFeaturedBooks] = useState([
         {
@@ -95,4 +95,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default HomePage;

@@ -1,75 +1,77 @@
 import React, { useState } from 'react';
-import Pagination from '../../components/Pagination';
+import Pagination from '../../components/common/Pagination';
 
-const RentedBooks = () => {
+const BooksHistoryPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
-    const booksPerPage = 4; // Changed to 5 to match others
-    
-    const rentedBooks = [
+    const booksPerPage = 5; // Show 5 books per page
+
+    // Sample book history data
+    const bookHistory = [
         {
             id: 1,
-            title: 'The History of a Difficult',
+            title: 'The History of a Difficult Child',
             rentedDate: '22 Aug 2023',
             returnDate: '29 Aug 2023',
-            status: 'Borrowed'
+            status: 'Returned'
         },
         {
             id: 2,
             title: 'The History of a Difficult Child',
             rentedDate: '22 Aug 2023',
             returnDate: '29 Aug 2023',
-            status: 'Borrowed'
+            status: 'Returned'
         },
         {
             id: 3,
             title: 'The History of a Difficult Child',
             rentedDate: '22 Aug 2023',
             returnDate: '29 Aug 2023',
-            status: 'Delayed'
+            status: 'Returned'
         },
         {
             id: 4,
             title: 'The History of a Difficult Child',
             rentedDate: '22 Aug 2023',
             returnDate: '29 Aug 2023',
-            status: 'Extended'
+            status: 'Returned'
         },
         {
             id: 5,
             title: 'The History of a Difficult Child',
             rentedDate: '22 Aug 2023',
             returnDate: '29 Aug 2023',
-            status: 'Extended'
+            status: 'Returned'
+        },
+        {
+            id: 6,
+            title: 'The History of a Difficult Child',
+            rentedDate: '22 Aug 2023',
+            returnDate: '29 Aug 2023',
+            status: 'Returned'
+        },
+        {
+            id: 7,
+            title: 'The History of a Difficult Child',
+            rentedDate: '22 Aug 2023',
+            returnDate: '29 Aug 2023',
+            status: 'Returned'
         }
     ];
 
     // Calculate pagination
-    const totalPages = Math.ceil(rentedBooks.length / booksPerPage);
+    const totalPages = Math.ceil(bookHistory.length / booksPerPage);
     const indexOfLastBook = currentPage * booksPerPage;
     const indexOfFirstBook = indexOfLastBook - booksPerPage;
-    const currentBooks = rentedBooks.slice(indexOfFirstBook, indexOfLastBook);
+    const currentBooks = bookHistory.slice(indexOfFirstBook, indexOfLastBook);
 
     // Handle page change
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
 
-    const getStatusColor = (status) => {
-        switch (status) {
-            case 'Borrowed':
-                return 'text-green-600';
-            case 'Delayed':
-                return 'text-red-600';
-            case 'Extended':
-                return 'text-blue-600';
-            default:
-                return 'text-gray-600';
-        }
-    };
-
     return (
-        <div>
-            <h1 className="text-5xl font-bold mb-6 p-8">Rented Books</h1>
+        <div className='pl-6'>
+            <h1 className="text-5xl font-bold mb-6 p-8">Books History</h1>
 
             <div className="w-full pl-8">
                 <div className="grid grid-cols-4 mb-4">
@@ -85,7 +87,7 @@ const RentedBooks = () => {
                             <div className="text-gray-800">{book.title}</div>
                             <div className="text-gray-600">{book.rentedDate}</div>
                             <div className="text-gray-600">{book.returnDate}</div>
-                            <div className={getStatusColor(book.status)}>{book.status}</div>
+                            <div className="text-gray-500">{book.status}</div>
                         </div>
                     ))}
                 </div>
@@ -102,4 +104,4 @@ const RentedBooks = () => {
     );
 };
 
-export default RentedBooks;
+export default BooksHistoryPage;

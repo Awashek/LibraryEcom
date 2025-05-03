@@ -11,13 +11,13 @@ const ProfileLayout = () => {
   ];
   
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen max-w-7xl mx-auto my-10">
       {/* Left Sidebar Navigation */}
       <div className="w-80 bg-white border-r">
         <div className="flex flex-col items-center pt-8 pb-6">
           <div className="w-32 h-32 rounded-full overflow-hidden mb-4">
             <img 
-              src="/api/placeholder/150/150" 
+              src="../../images/Logo.svg" 
               alt="Profile" 
               className="w-full h-full object-cover"
             />

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-export default function Cart() {
+export default function CartPage() {
     // Sample cart data - in a real app, this would come from your state management (Redux, Context, etc.)
     const [cartItems, setCartItems] = useState([
         {

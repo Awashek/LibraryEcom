@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Bookmark } from 'lucide-react';
 
-export default function Wishlist() {
+export default function WishlisPage() {
     const [books, setBooks] = useState([
         {
             id: 1,
