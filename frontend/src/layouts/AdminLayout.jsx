@@ -26,7 +26,7 @@ export default function AdminLayout() {
                 }}
                 className="flex items-center mb-10 p-4"
             >
-                <img src="/images/BOOKISH1.svg" alt="Bookish Logo" width="150" height="40" />
+                <img src="../../images/Logo2.png" alt="Bookish Logo" width="150" height="40" />
             </a>
 
             <nav className="flex flex-col gap-1">

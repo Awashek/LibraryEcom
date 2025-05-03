@@ -23,6 +23,7 @@ import Footer from '../components/Footer';
 import ProductsPage from '../pages/ProductsPage';
 import ProductForm from '../components/ProductForm';
 import DashboardPage from '../pages/DashboardPage';
+import AllBooksPage from '../pages/AllBooksPage';
 const Layout = ({ children }) => {
   const location = useLocation();
   const authPages = ['/login', '/register','/dashboard','/products','/productsform',];
@@ -55,6 +56,7 @@ const Routing = () => {
           <Route path='/products' element={<ProductsPage />} />
           <Route path='/productsform' element={<ProductForm />} />
           <Route path='/dashboard' element={<DashboardPage />} />
+          <Route path='/allbooks' element={<AllBooksPage />} />
           {/* Profile routes */}
           <Route path='/profile' element={<ProfileLayout />}>
             <Route index element={<ProfilePage />} />

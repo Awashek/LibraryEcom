@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
-import TopSellers from '../components/TopSellers';
-import RecommendedForYou from '../components/RecommendedForYou';
-import { ArrowUpRight } from 'lucide-react';
+
+import NewArrivals from '../components/NewArrivals';
+import { ArrowRight } from 'lucide-react';
+import PopularGenres from '../components/PopularGenres';
+import ReadsOnSale from '../components/ReadsOnSale';
 const HomePage = () => {
     // Mock data for featured books
     const [featuredBooks, setFeaturedBooks] = useState([
@@ -62,19 +64,19 @@ const HomePage = () => {
     return (
         <div className="bg-white">
             {/* Hero Section */}
-            <div className="relative bg-gray-50">
+            <div className="relative bg-[#222]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
                     <div className="lg:grid lg:grid-cols-2 lg:gap-8 items-center">
                         <div>
-                            <h1 className="text-xl font-thin tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
+                            <h1 className="text-xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
                                 <span className="block">New Releases This Week</span>
                             </h1>
-                            <p className="mt-4 max-w-2xl text-xl text-gray-500">
-                                It's time to update your reading list with some of the latest and greatest releases in the literary world. From heart-pumping thrillers to captivating memoirs, this week's new releases offer something for everyone
+                            <p className="mt-4 max-w-2xl text-xl text-white">
+                                Experience the joy of reading with us
                             </p>
                             <div className="mt-8 flex space-x-4">
-                                <button className='bg-black text-white py-2 px-6 rounded-full flex items-center gap-2'>
-                                    Explore <ArrowUpRight size={16} />
+                                <button className='bg-white text-black py-2 px-8 rounded-full flex items-center gap-2 hover:gap-3 transition-all duration-200'>
+                                    Explore Now <ArrowRight size={18} className="transition-transform duration-200 hover:translate-x-1" />
                                 </button>
                             </div>
                         </div>
@@ -82,7 +84,7 @@ const HomePage = () => {
                             <div className="pl-4 -ml-16 -mr-16 sm:pl-6 md:-ml-16 lg:pl-0 lg:ml-0 lg:mr-0">
                                 <img
                                     className="w-full rounded-xl shadow-xl ring-1 ring-black ring-opacity-5"
-                                    src="/images/placeholder-book.jpg"
+                                    src="/images/Homeimg.png"
                                     alt="BookShop collection"
                                 />
                             </div>
@@ -90,8 +92,9 @@ const HomePage = () => {
                     </div>
                 </div>
             </div>
-            <TopSellers books={featuredBooks} />
-            <RecommendedForYou books={featuredBooks} />
+            <NewArrivals/>
+            <PopularGenres/>
+            <ReadsOnSale/>
         </div>
     );
 };

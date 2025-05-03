@@ -1,16 +1,27 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
     const [showAccountDropdown, setShowAccountDropdown] = useState(false);
+    const [showGenreDropdown, setShowGenreDropdown] = useState(false);
 
-    const toggleDropdown = () => {
+    const location = useLocation();
+    const isHomePage = location.pathname === '/';
+
+    const toggleAccountDropdown = () => {
         setShowAccountDropdown(!showAccountDropdown);
+        setShowGenreDropdown(false);
     };
 
-    // Close dropdown when clicking outside
-    const closeDropdown = () => {
+    const toggleGenreDropdown = () => {
+        setShowGenreDropdown(!showGenreDropdown);
         setShowAccountDropdown(false);
+    };
+
+    // Close dropdowns when clicking outside
+    const closeDropdowns = () => {
+        setShowAccountDropdown(false);
+        setShowGenreDropdown(false);
     };
 
     return (
@@ -21,112 +32,108 @@ const Navbar = () => {
                     <div className="flex items-center">
                         <Link to="/" className="flex items-center">
                             <img
-                                className="h-6 w-auto"  // Adjusted to maintain aspect ratio
+                                className="h-5 w-auto"
                                 src="/images/Logo.svg"
                                 alt="BookShop Logo"
                             />
                         </Link>
                     </div>
 
-                    {/* Search Bar - Centered */}
-                    <div className="flex-1 max-w-xl mx-4">
+                    {/* Center Navigation */}
+                    <div className="hidden md:flex items-center space-x-1">
+                        <Link
+                            to="/"
+                            className={`flex items-center px-4 py-2 rounded-full ${isHomePage
+                                    ? "bg-gray-900 text-white hover:bg-gray-800"
+                                    : "text-gray-700 hover:text-white hover:bg-gray-900 transition-colors duration-300"
+                                }`}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                            Home
+                        </Link>
+
                         <div className="relative">
-                            <input
-                                type="text"
-                                placeholder="What are you looking for?"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
-                            />
-                            <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            <button
+                                className="flex items-center px-4 py-2 text-gray-700 hover:text-white hover:bg-gray-900 rounded-full transition-colors duration-300"
+                                onClick={toggleGenreDropdown}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
                                 </svg>
+                                Genre & Themes
                             </button>
+
+                            {/* Genre Dropdown */}
+                            {showGenreDropdown && (
+                                <>
+                                    <div
+                                        className="fixed inset-0 z-10"
+                                        onClick={closeDropdowns}
+                                    ></div>
+
+                                    <div className="absolute left-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-20 border border-gray-200">
+                                        <Link to="/genre/fiction" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Fiction</Link>
+                                        <Link to="/genre/non-fiction" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Non-Fiction</Link>
+                                        <Link to="/genre/mystery" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mystery & Thriller</Link>
+                                        <Link to="/genre/scifi" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Science Fiction & Fantasy</Link>
+                                        <Link to="/genre/romance" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Romance</Link>
+                                        <Link to="/genre/children" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Children's Books</Link>
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </div>
 
                     {/* Right Navigation */}
                     <div className="flex items-center space-x-4">
+                        {/* Search Icon */}
+                        <button className="text-gray-600 hover:text-gray-900 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </button>
+
                         {/* Account with Dropdown */}
                         <div className="relative">
-                            <button 
+                            <button
                                 className="text-gray-600 hover:text-gray-900 focus:outline-none"
-                                onClick={toggleDropdown}
+                                onClick={toggleAccountDropdown}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
                             </button>
-                            
-                            {/* Dropdown Menu */}
+
+                            {/* Account Dropdown Menu */}
                             {showAccountDropdown && (
                                 <>
-                                    {/* Invisible overlay to detect outside clicks */}
-                                    <div 
-                                        className="fixed inset-0 z-10" 
-                                        onClick={closeDropdown}
+                                    <div
+                                        className="fixed inset-0 z-10"
+                                        onClick={closeDropdowns}
                                     ></div>
-                                    
+
                                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 border border-gray-200">
-                                        <Link 
-                                            to="/login" 
-                                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                            onClick={closeDropdown}
-                                        >
-                                            Login
-                                        </Link>
-                                        <Link 
-                                            to="/register" 
-                                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                            onClick={closeDropdown}
-                                        >
-                                            Register
-                                        </Link>
+                                        <Link to="/login" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Login</Link>
+                                        <Link to="/register" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Register</Link>
                                         <div className="border-t border-gray-100"></div>
-                                        <Link 
-                                            to="/profile" 
-                                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                            onClick={closeDropdown}
-                                        >
-                                            My Profile
-                                        </Link>
-                                        <Link 
-                                            to="/orders" 
-                                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                            onClick={closeDropdown}
-                                        >
-                                            My Orders
-                                        </Link>
-                                        <Link 
-                                            to="/settings" 
-                                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                            onClick={closeDropdown}
-                                        >
-                                            Settings
-                                        </Link>
+                                        <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Profile</Link>
+                                        <Link to="/orders" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Orders</Link>
+                                        <Link to="/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</Link>
                                         <div className="border-t border-gray-100"></div>
-                                        <Link 
-                                            to="/logout" 
-                                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                            onClick={closeDropdown}
-                                        >
-                                            Logout
-                                        </Link>
+                                        <Link to="/logout" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</Link>
                                     </div>
                                 </>
                             )}
                         </div>
-                        
-                        <Link to="/wishlist" className="text-gray-600 hover:text-gray-900">
+
+                        {/* Mobile Menu Button */}
+                        <button className="md:hidden text-gray-600 hover:text-gray-900 focus:outline-none">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
-                        </Link>
-                        <Link to="/cart" className="flex items-center bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                            </svg>
-                            Cart
-                        </Link>
+                        </button>
                     </div>
                 </div>
             </div>
