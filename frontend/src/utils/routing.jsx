@@ -20,10 +20,12 @@ import SavedBooksPage from '../pages/profile/SavedBooksPage';
 import BooksHistoryPage from '../pages/profile/BookHistoryPage';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-
+import ProductsPage from '../pages/ProductsPage';
+import ProductForm from '../components/ProductForm';
+import DashboardPage from '../pages/DashboardPage';
 const Layout = ({ children }) => {
   const location = useLocation();
-  const authPages = ['/login', '/register'];
+  const authPages = ['/login', '/register','/dashboard','/products','/productsform',];
   const isAuthPage = authPages.includes(location.pathname);
 
   return (
@@ -50,7 +52,9 @@ const Routing = () => {
           <Route path='/wishlist' element={<WishlistPage />} />
           <Route path='/cart' element={<CartPage />} />
           <Route path='/bookdetails' element={<BookDetails />} />
-
+          <Route path='/products' element={<ProductsPage />} />
+          <Route path='/productsform' element={<ProductForm />} />
+          <Route path='/dashboard' element={<DashboardPage />} />
           {/* Profile routes */}
           <Route path='/profile' element={<ProfileLayout />}>
             <Route index element={<ProfilePage />} />

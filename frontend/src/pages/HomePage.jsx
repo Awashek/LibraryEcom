@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import TopSellers from '../components/TopSellers';
 import RecommendedForYou from '../components/RecommendedForYou';
+import { ArrowUpRight } from 'lucide-react';
 const HomePage = () => {
     // Mock data for featured books
     const [featuredBooks, setFeaturedBooks] = useState([
@@ -72,8 +73,8 @@ const HomePage = () => {
                                 It's time to update your reading list with some of the latest and greatest releases in the literary world. From heart-pumping thrillers to captivating memoirs, this week's new releases offer something for everyone
                             </p>
                             <div className="mt-8 flex space-x-4">
-                                <button className="bg-gray-900 text-white px-6 py-2 rounded-md hover:bg-gray-700 transition-colors">
-                                    Subscribe
+                                <button className='bg-black text-white py-2 px-6 rounded-full flex items-center gap-2'>
+                                    Explore <ArrowUpRight size={16} />
                                 </button>
                             </div>
                         </div>
