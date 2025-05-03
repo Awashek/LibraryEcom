@@ -193,7 +193,7 @@ export default function RegisterPage() {
                             <button
                                 onClick={handleSubmit}
                                 disabled={isLoading}
-                                className="w-full bg-black text-white py-2 px-4 rounded-full hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors disabled:opacity-70"
+                                className="w-1/3 bg-black text-white py-2 px-4 rounded-full hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors disabled:opacity-70"
                             >
                                 {isLoading ? "Processing..." : "Sign Up"}
                             </button>
