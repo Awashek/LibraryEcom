@@ -25,6 +25,9 @@ import ProductForm from '../components/ProductForm';
 import DashboardPage from '../pages/DashboardPage';
 import AllBooksPage from '../pages/AllBooksPage';
 import GenresAndTheam from '../pages/GenresAndThem';
+import AuthorDescription from '../pages/AuthorDescription';
+
+
 const Layout = ({ children }) => {
   const location = useLocation();
   const authPages = ['/login', '/register','/dashboard','/products','/productsform',];
@@ -52,6 +55,7 @@ const Routing = () => {
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
           <Route path='genresandthem' element={<GenresAndTheam />} />
+          <Route path='authordescription' element={<AuthorDescription />} />
           <Route path='/wishlist' element={<WishlistPage />} />
           <Route path='/cart' element={<CartPage />} />
           <Route path='/bookdetails' element={<BookDetails />} />
