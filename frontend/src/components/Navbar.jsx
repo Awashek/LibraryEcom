@@ -7,6 +7,7 @@ const Navbar = () => {
 
     const location = useLocation();
     const isHomePage = location.pathname === '/';
+    const isGenrePage = location.pathname === '/genresandthem' || location.pathname === '/allbooks';
 
     const toggleAccountDropdown = () => {
         setShowAccountDropdown(!showAccountDropdown);
@@ -43,10 +44,11 @@ const Navbar = () => {
                     <div className="hidden md:flex items-center space-x-1">
                         <Link
                             to="/"
-                            className={`flex items-center px-4 py-2 rounded-full ${isHomePage
+                            className={`flex items-center px-4 py-2 rounded-full ${
+                                isHomePage
                                     ? "bg-gray-900 text-white hover:bg-gray-800"
                                     : "text-gray-700 hover:text-white hover:bg-gray-900 transition-colors duration-300"
-                                }`}
+                            }`}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -55,34 +57,19 @@ const Navbar = () => {
                         </Link>
 
                         <div className="relative">
-                            <button
-                                className="flex items-center px-4 py-2 text-gray-700 hover:text-white hover:bg-gray-900 rounded-full transition-colors duration-300"
-                                onClick={toggleGenreDropdown}
+                            <Link
+                                to="/genresandthem"
+                                className={`flex items-center px-4 py-2 rounded-full ${
+                                    isGenrePage
+                                        ? "bg-gray-900 text-white hover:bg-gray-800"
+                                        : "text-gray-700 hover:text-white hover:bg-gray-900 transition-colors duration-300"
+                                }`}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
                                 </svg>
                                 Genre & Themes
-                            </button>
-
-                            {/* Genre Dropdown */}
-                            {showGenreDropdown && (
-                                <>
-                                    <div
-                                        className="fixed inset-0 z-10"
-                                        onClick={closeDropdowns}
-                                    ></div>
-
-                                    <div className="absolute left-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-20 border border-gray-200">
-                                        <Link to="/genre/fiction" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Fiction</Link>
-                                        <Link to="/genre/non-fiction" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Non-Fiction</Link>
-                                        <Link to="/genre/mystery" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mystery & Thriller</Link>
-                                        <Link to="/genre/scifi" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Science Fiction & Fantasy</Link>
-                                        <Link to="/genre/romance" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Romance</Link>
-                                        <Link to="/genre/children" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Children's Books</Link>
-                                    </div>
-                                </>
-                            )}
+                            </Link>
                         </div>
                     </div>
 

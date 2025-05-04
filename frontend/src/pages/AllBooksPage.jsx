@@ -128,7 +128,6 @@ const AllBooksPage = () => {
     const booksPerPage = 10;
     const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
 
-    // Filter and sort books based on search query and sort option
     useEffect(() => {
         let result = [...allBooks];
 
@@ -159,7 +158,8 @@ const AllBooksPage = () => {
         }
 
         setFilteredBooks(result);
-    }, [searchQuery, sortOption, allBooks]);
+    }, [searchQuery, sortOption]); // Removed allBooks from dependencies
+
 
     // Get current books for current page
     const indexOfLastBook = currentPage * booksPerPage;

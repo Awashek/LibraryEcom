@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const NewArrivals = () => {
+    const navigate = useNavigate();
     // Books data for New Arrivals section
     const [newArrivals, setNewArrivals] = useState([
         {
@@ -38,20 +40,26 @@ const NewArrivals = () => {
             cover: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQVhs0zWJkL9afwN2gqJJ3vtmX4yJVAeZchddbahTVkHzCi9fyKtXwj0OEcznWUsFRn_VKd",
             status: "Available"
         },
-        
+
     ]);
 
     useEffect(() => {
         console.log("New Arrivals component mounted");
     }, []);
 
+    const handleAllBooksClick = () => {
+        navigate('/allbooks');
+    };
+
     return (
         <div className="py-16 bg-white">
             <div className="max-w-7xl mx-auto px-4">
-                {/* Section Title */}
-                <h2 className="text-3xl font-normal text-center mb-12 tracking-wider">
-                    NEW ARRIVALS
-                </h2>
+                {/* Section Title and All Books Button */}
+                <div className="flex justify-center items-center mb-12">
+                    <h2 className="text-3xl font-normal tracking-wider">
+                        NEW ARRIVALS
+                    </h2>
+                </div>
 
                 {/* Book Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
@@ -81,6 +89,16 @@ const NewArrivals = () => {
                             </p>
                         </div>
                     ))}
+                </div>
+
+                {/* Bottom Center "View All Books" Button */}
+                <div className="flex justify-center mt-12">
+                    <button
+                        onClick={handleAllBooksClick}
+                        className="px-8 py-3 bg-white text-black rounded-full hover:bg-black hover:text-white transition-colors font-medium border border-gray-500 hover:border-black"
+                    >
+                        View All Books
+                    </button>
                 </div>
             </div>
         </div>
