@@ -25,9 +25,23 @@ import ProductForm from '../components/ProductForm';
 import DashboardPage from '../pages/DashboardPage';
 import AllBooksPage from '../pages/AllBooksPage';
 import GenresAndTheam from '../pages/GenresAndThem';
+import ProtectedRoute from './ProtectedRoute';
+import UserManagement from '../pages/UserManagement';
+import AnnouncementPage from '../pages/admin/AnnouncementPage';
+import AddAnnouncement from '../components/Admin/Announcement/AddAnnouncement';
+
 const Layout = ({ children }) => {
   const location = useLocation();
-  const authPages = ['/login', '/register','/dashboard','/products','/productsform',];
+  const authPages = [
+    '/login',
+    '/register',
+    '/dashboard',
+    '/products',
+    '/productsform',
+    '/announcement',
+    '/add-announcement',
+    '/UserManagement',
+  ];
   const isAuthPage = authPages.includes(location.pathname);
 
   return (
@@ -46,29 +60,41 @@ const Routing = () => {
     <Router>
       <Layout>
         <Routes>
+          {/* Public Routes */}
           <Route path='/' element={<HomePage />} />
           <Route path='/allbooks' element={<AllBooksPage />} />
           <Route path='/test-connection' element={<TestConnection />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
           <Route path='genresandthem' element={<GenresAndTheam />} />
-          <Route path='/wishlist' element={<WishlistPage />} />
-          <Route path='/cart' element={<CartPage />} />
-          <Route path='/bookdetails' element={<BookDetails />} />
-          <Route path='/products' element={<ProductsPage />} />
-          <Route path='/productsform' element={<ProductForm />} />
-          <Route path='/dashboard' element={<DashboardPage />} />
-          
-          {/* Profile routes */}
-          <Route path='/profile' element={<ProfileLayout />}>
-            <Route index element={<ProfilePage />} />
-            <Route path='rented' element={<RentedBooksPage />} />
-            <Route path='booked' element={<BookedBooksPage />} />
-            <Route path='saved' element={<SavedBooksPage />} />
-            <Route path='history' element={<BooksHistoryPage />} />
+
+          {/* Protected Routes for Users (regular users) */}
+          <Route element={<ProtectedRoute allowedRoles={['User']} />}>
+            <Route path='/wishlist' element={<WishlistPage />} />
+            <Route path='/cart' element={<CartPage />} />
+            <Route path='/bookdetails' element={<BookDetails />} />
+
+            {/* Profile routes */}
+            <Route path='/profile' element={<ProfileLayout />}>
+              <Route index element={<ProfilePage />} />
+              <Route path='rented' element={<RentedBooksPage />} />
+              <Route path='booked' element={<BookedBooksPage />} />
+              <Route path='saved' element={<SavedBooksPage />} />
+              <Route path='history' element={<BooksHistoryPage />} />
+            </Route>
           </Route>
 
-          {/* Static */}
+          {/* Protected Routes for Admin only */}
+          <Route element={<ProtectedRoute allowedRoles={['Admin']} />}>
+            <Route path='/dashboard' element={<DashboardPage />} />
+            <Route path='/products' element={<ProductsPage />} />
+            <Route path='/productsform' element={<ProductForm />} />
+            <Route path='/announcement' element={<AnnouncementPage />} />
+            <Route path='/add-announcement' element={<AddAnnouncement />} />
+            <Route path='/UserManagement' element={<UserManagement />} />
+          </Route>
+
+          {/* Static pages public */}
           <Route
             path='/about'
             element={

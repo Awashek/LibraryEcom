@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from '../../utils/axios/axios';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+// import 'react-toastify/dist/ReactToastify.css';
 import BackButton from '../../components/BackButton';
+import useSignIn from 'react-auth-kit/hooks/useSignIn';
 
 export default function Login() {
   const navigate = useNavigate();
+  const signIn = useSignIn();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -21,17 +24,49 @@ export default function Login() {
         provider: 'WASM',
       })
       .then((response) => {
-        const { token, userDetails } = response.data.result;
+        const { token, userDetails, expiresIn = 3600 } = response.data.result;
 
-        localStorage.setItem('authToken', token);
-        localStorage.setItem('auth', JSON.stringify(userDetails));
+        // Extract role from userDetails
+        const userRole = userDetails?.roleName || 'User'; // Default to User if missing
 
-        toast.success('Login Successful');
+        const success = signIn({
+          auth: {
+            token: token,
+            type: 'Bearer',
+            expiresIn: expiresIn, // seconds
+          },
+          userState: {
+            ...userDetails,
+            role: userRole,
+          },
+          remember: rememberMe,
+        });
 
-        navigate('/test-connection');
+        if (success) {
+          toast.success('Login successful');
+
+          // Navigate based on role
+          switch (userRole) {
+            case 'Admin':
+              navigate('/dashboard');
+              break;
+            case 'Staff':
+              navigate('/products');
+              break;
+            case 'User':
+            default:
+              navigate('/');
+              break;
+          }
+        } else {
+          toast.error('Failed to sign in');
+        }
       })
-      .catch(() => {
-        toast.error('Invalid email or password.');
+      .catch((error) => {
+        // Check if error response exists and has a message
+        const errorMessage =
+          error.response?.data?.message || 'Login failed. Please try again.';
+        toast.error(errorMessage);
       });
   };
 
@@ -40,8 +75,6 @@ export default function Login() {
       className='min-h-screen flex items-center justify-center bg-cover bg-center'
       style={{
         backgroundImage: `url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')`,
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover',
       }}
     >
       <div className='bg-white overflow-hidden max-w-2xl w-full p-12 shadow-xl rounded-lg relative'>
