@@ -119,9 +119,9 @@ const GenresAndTheme = () => {
  
 
   return (
-    <div className="bg-[#1E1E1E] pt-[92px] min-h-screen">
+    <div className="bg-[#1E1E1E] pt-[92px] min-h-screen ">
       {/* All Books Section */}
-      <section className="container mx-auto px-4">
+      <section className="mx-[0px] px-[120px]">
         <div className="mb-12">
           <div className="flex justify-between items-center text-white mb-11">
             <Link to="/allbooks">
@@ -168,16 +168,17 @@ const GenresAndTheme = () => {
       </section>
 
       {/* Genre and Themes Section */}
-      <section className="container mx-auto px-4 py-12">
-        <div className="text-center mb-14">
-          <h2 className="text-white text-3xl font-bold">GENRE AND THEMES</h2>
-        </div>
-        <div className="flex justify-center">
-        <div className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+<section className="w-screen bg-white py-12 px-[120px]">
+  <div className=" sm:px-4">
+    <div className="text-center mb-14">
+      <h2 className="text-black text-3xl font-bold">GENRE & THEMES</h2>
+    </div>
+    <div className="flex justify-center">
+      <div className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
         {genres.map((genre) => (
           <Link key={genre.id} to="/categories" className="group">
             <div className="flex flex-col items-center">
-              <div className="w-full h-[425px] p-2 border-2 border-dashed border-gray-600 rounded-[400px] group-hover:border-[#0077ff] transition-all">
+              <div className="w-full h-fit p-2 border-2 border-dashed border-gray-600 rounded-[400px] group-hover:border-[#0077ff] transition-all">
                 <div className="w-full h-full rounded-[400px] overflow-hidden">
                   <img
                     src={genre.image}
@@ -187,7 +188,7 @@ const GenresAndTheme = () => {
                 </div>
               </div>
               <div className="mt-4 text-center">
-                <p className="text-xl text-white font-medium group-hover:text-[#0077ff] transition-colors">
+                <p className="text-xl text-black font-medium group-hover:text-[#0077ff] transition-colors">
                   {genre.title}
                 </p>
                 <p className="text-sm text-gray-400 mt-1">-{genre.bookCount}-</p>
@@ -195,9 +196,11 @@ const GenresAndTheme = () => {
             </div>
           </Link>
         ))}
-        </div>
       </div>
-      </section>
+    </div>
+  </div>
+</section>
+
     </div>
   );
 };
