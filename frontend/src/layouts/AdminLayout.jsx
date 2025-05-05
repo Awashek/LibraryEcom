@@ -73,14 +73,12 @@ export default function AdminLayout() {
         </a>
 
         <a
-          href='/products'
+          href='/books-management'
           onClick={(e) => {
             e.preventDefault();
-            handleNavigation('/products');
+            handleNavigation('/books-management');
           }}
-          className={
-            activePath.includes('/products') ? activeLink : inactiveLink
-          }
+          className={activePath.includes('/books-management') ? activeLink : inactiveLink}
         >
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -96,7 +94,7 @@ export default function AdminLayout() {
               d='m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z'
             />
           </svg>
-          Products
+          Books Management
         </a>
 
         <a
@@ -156,6 +154,33 @@ export default function AdminLayout() {
             />
           </svg>
           User Management
+        </a>
+
+        <a
+          href='/author-management'
+          onClick={(e) => {
+            e.preventDefault();
+            handleNavigation('/author-management');
+          }}
+          className={
+            activePath.includes('/add-author') ? activeLink : inactiveLink
+          }
+        >
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
+            strokeWidth={1.5}
+            stroke='currentColor'
+            className='w-5 h-5'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              d='M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z'
+            />
+          </svg>
+          Author Management
         </a>
 
         <a

@@ -11,11 +11,11 @@ import {
   Search,
   Plus,
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom'; // ✅ Import navigate hook
-import AdminLayout from '../layouts/AdminLayout';
-import useAxios from '../utils/axios/useAxios';
+import { useNavigate } from 'react-router-dom'; // Import navigate hook
+import AdminLayout from '../../layouts/AdminLayout';
+import useAxios from '../../utils/axios/useAxios';
 
-export default function ProductsPage() {
+export default function BooksManagementPage() {
   // const [products, setProducts] = useState([
   //   {
   //     id: 'ISBN-9780140449136',
@@ -146,7 +146,7 @@ export default function ProductsPage() {
               </button>
 
               <button
-                onClick={() => navigate('/productsform')}
+                onClick={() => navigate('/add-book')}
                 className='flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors whitespace-nowrap'
               >
                 <Plus size={16} />
@@ -228,9 +228,7 @@ export default function ProductsPage() {
                       <td className='px-6 py-4 flex gap-2'>
                         <button
                           className='text-indigo-600 hover:text-indigo-900'
-                          onClick={() =>
-                            navigate(`/productsform/${product.id}`)
-                          }
+                          onClick={() => navigate(`/add-book/${product.id}`)}
                         >
                           <Edit size={16} />
                         </button>

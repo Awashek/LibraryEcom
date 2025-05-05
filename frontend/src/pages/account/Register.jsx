@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import BackButton from '../../components/BackButton';
+import BackButton from '../../components/common/BackButton';
 import axios from '../../utils/axios/axios';
 
 export default function Register() {

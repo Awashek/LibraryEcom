@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from '../../utils/axios/axios';
 import { toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
-import BackButton from '../../components/BackButton';
+import BackButton from '../../components/common/BackButton';
 import useSignIn from 'react-auth-kit/hooks/useSignIn';
 
 export default function Login() {
