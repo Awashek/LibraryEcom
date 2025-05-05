@@ -29,6 +29,7 @@ import ProtectedRoute from './ProtectedRoute';
 import UserManagement from '../pages/UserManagement';
 import AnnouncementPage from '../pages/admin/AnnouncementPage';
 import AddAnnouncement from '../components/Admin/Announcement/AddAnnouncement';
+import AuthorDescription from '../pages/AuthorDescription';
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -69,19 +70,34 @@ const Routing = () => {
           <Route path='genresandthem' element={<GenresAndTheam />} />
 
           {/* Protected Routes for Users (regular users) */}
-          <Route element={<ProtectedRoute allowedRoles={['User']} />}>
-            <Route path='/wishlist' element={<WishlistPage />} />
-            <Route path='/cart' element={<CartPage />} />
-            <Route path='/bookdetails' element={<BookDetails />} />
+          <Route element={<ProtectedRoute allowedRoles={['User']} />} />
+          <Route path='/wishlist' element={<WishlistPage />} />
+          <Route path='/cart' element={<CartPage />} />
+          <Route path='/bookdetails' element={<BookDetails />} />
 
-            {/* Profile routes */}
-            <Route path='/profile' element={<ProfileLayout />}>
-              <Route index element={<ProfilePage />} />
-              <Route path='rented' element={<RentedBooksPage />} />
-              <Route path='booked' element={<BookedBooksPage />} />
-              <Route path='saved' element={<SavedBooksPage />} />
-              <Route path='history' element={<BooksHistoryPage />} />
-            </Route>
+          {/* Profile routes */}
+          <Route path='/profile' element={<ProfileLayout />}>
+            <Route index element={<ProfilePage />} />
+            <Route path='rented' element={<RentedBooksPage />} />
+            <Route path='booked' element={<BookedBooksPage />} />
+            <Route path='saved' element={<SavedBooksPage />} />
+            <Route path='history' element={<BooksHistoryPage />} />
+          </Route>
+          <Route path='authordescription' element={<AuthorDescription />} />
+          <Route path='/wishlist' element={<WishlistPage />} />
+          <Route path='/cart' element={<CartPage />} />
+          <Route path='/bookdetails' element={<BookDetails />} />
+          <Route path='/products' element={<ProductsPage />} />
+          <Route path='/productsform' element={<ProductForm />} />
+          <Route path='/dashboard' element={<DashboardPage />} />
+
+          {/* Profile routes */}
+          <Route path='/profile' element={<ProfileLayout />}>
+            <Route index element={<ProfilePage />} />
+            <Route path='rented' element={<RentedBooksPage />} />
+            <Route path='booked' element={<BookedBooksPage />} />
+            <Route path='saved' element={<SavedBooksPage />} />
+            <Route path='history' element={<BooksHistoryPage />} />
           </Route>
 
           {/* Protected Routes for Admin only */}

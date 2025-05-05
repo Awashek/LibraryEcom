@@ -79,7 +79,6 @@ const Navbar = () => {
               </svg>
               Home
             </Link>
-
             <div className='relative'>
               <Link
                 to='/genresandthem'
@@ -105,105 +104,165 @@ const Navbar = () => {
                 </svg>
                 Genre & Themes
               </Link>
-            </div>
-          </div>
-
-          {/* Right Navigation */}
-          <div className='flex items-center space-x-4'>
-            {/* Search Icon */}
-            <button className='text-gray-600 hover:text-gray-900 focus:outline-none'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                className='h-6 w-6'
-                fill='none'
-                viewBox='0 0 24 24'
-                stroke='currentColor'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
-                />
-              </svg>
-            </button>
-
-            {/* Account with Dropdown */}
-            <div className='relative'>
-              <button
-                className='text-gray-600 hover:text-gray-900 focus:outline-none'
-                onClick={toggleAccountDropdown}
-              >
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  className='h-6 w-6'
-                  fill='none'
-                  viewBox='0 0 24 24'
-                  stroke='currentColor'
-                >
-                  <path
+              {/* Right Navigation */}
+              <div className='flex items-center space-x-4'>
+                {/* Search Icon */}
+                <button className='text-gray-600 hover:text-gray-900 focus:outline-none'>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    className='h-6 w-6'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    stroke='currentColor'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      strokeWidth={2}
+                      d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
+                    />
+                  </svg>
+                </button>
+                {/* Cart Icon */}
+                <Link to='/cart' className='text-gray-600 hover:text-gray-900'>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    className='h-6 w-6'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeWidth={2}
                     strokeLinecap='round'
                     strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'
-                  />
-                </svg>
-              </button>
+                  >
+                    <circle cx='9' cy='21' r='1' />
+                    <circle cx='20' cy='21' r='1' />
+                    <path d='M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61l1.38-7.39H6' />
+                  </svg>
+                </Link>
 
-              {/* Account Dropdown Menu */}
-              {showAccountDropdown && (
-                <>
-                  <div
-                    className='fixed inset-0 z-10'
-                    onClick={closeDropdowns}
-                  ></div>
+                {/* Account with Dropdown */}
+                <div className='relative'>
+                  <button
+                    className='text-gray-600 hover:text-gray-900 focus:outline-none'
+                    onClick={toggleAccountDropdown}
+                  >
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      className='h-6 w-6'
+                      fill='none'
+                      viewBox='0 0 24 24'
+                      stroke='currentColor'
+                    >
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        strokeWidth={2}
+                        d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'
+                      />
+                    </svg>
+                  </button>
 
-                  <div className='absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 border border-gray-200'>
-                    <Link
-                      to='/login'
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-                    >
-                      Login
-                    </Link>
-                    <Link
-                      to='/register'
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-                    >
-                      Register
-                    </Link>
-                    <div className='border-t border-gray-100'></div>
-                    <Link
-                      to='/profile'
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-                    >
-                      My Profile
-                    </Link>
-                    <Link
-                      to='/orders'
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-                    >
-                      My Orders
-                    </Link>
-                    <Link
-                      to='/settings'
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-                    >
-                      Settings
-                    </Link>
-                    <div className='border-t border-gray-100'></div>
-                    <button
-                      onClick={handleLogout}
-                      className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-                    >
-                      Logout
-                    </button>
-                  </div>
-                </>
-              )}
+                  {/* Account Dropdown Menu */}
+                  {showAccountDropdown && (
+                    <>
+                      <div
+                        className='fixed inset-0 z-10'
+                        onClick={closeDropdowns}
+                      ></div>
+
+                      <div className='absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 border border-gray-200'>
+                        <Link
+                          to='/login'
+                          className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                        >
+                          Login
+                        </Link>
+                        <Link
+                          to='/register'
+                          className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                        >
+                          Register
+                        </Link>
+                        <div className='border-t border-gray-100'></div>
+                        <Link
+                          to='/profile'
+                          className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                        >
+                          My Profile
+                        </Link>
+                        <Link
+                          to='/orders'
+                          className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                        >
+                          My Orders
+                        </Link>
+                        <Link
+                          to='/settings'
+                          className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                        >
+                          Settings
+                        </Link>
+                        <div className='border-t border-gray-100'></div>
+                        <Link
+                          to='/logout'
+                          className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                        >
+                          Logout
+                        </Link>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {/* Mobile Menu Button */}
+                <button className='md:hidden text-gray-600 hover:text-gray-900 focus:outline-none'>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    className='h-6 w-6'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    stroke='currentColor'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      strokeWidth={2}
+                      d='M4 6h16M4 12h16M4 18h16'
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
+          </div>
+        </div>
 
-            {/* Mobile Menu Button */}
-            <button className='md:hidden text-gray-600 hover:text-gray-900 focus:outline-none'>
+        {/* Right Navigation */}
+        <div className='flex items-center space-x-4'>
+          {/* Search Icon */}
+          <button className='text-gray-600 hover:text-gray-900 focus:outline-none'>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              className='h-6 w-6'
+              fill='none'
+              viewBox='0 0 24 24'
+              stroke='currentColor'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth={2}
+                d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
+              />
+            </svg>
+          </button>
+
+          {/* Account with Dropdown */}
+          <div className='relative'>
+            <button
+              className='text-gray-600 hover:text-gray-900 focus:outline-none'
+              onClick={toggleAccountDropdown}
+            >
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 className='h-6 w-6'
@@ -215,11 +274,80 @@ const Navbar = () => {
                   strokeLinecap='round'
                   strokeLinejoin='round'
                   strokeWidth={2}
-                  d='M4 6h16M4 12h16M4 18h16'
+                  d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'
                 />
               </svg>
             </button>
+
+            {/* Account Dropdown Menu */}
+            {showAccountDropdown && (
+              <>
+                <div
+                  className='fixed inset-0 z-10'
+                  onClick={closeDropdowns}
+                ></div>
+
+                <div className='absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 border border-gray-200'>
+                  <Link
+                    to='/login'
+                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to='/register'
+                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                  >
+                    Register
+                  </Link>
+                  <div className='border-t border-gray-100'></div>
+                  <Link
+                    to='/profile'
+                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                  >
+                    My Profile
+                  </Link>
+                  <Link
+                    to='/orders'
+                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                  >
+                    My Orders
+                  </Link>
+                  <Link
+                    to='/settings'
+                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                  >
+                    Settings
+                  </Link>
+                  <div className='border-t border-gray-100'></div>
+                  <button
+                    onClick={handleLogout}
+                    className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                  >
+                    Logout
+                  </button>
+                </div>
+              </>
+            )}
           </div>
+
+          {/* Mobile Menu Button */}
+          <button className='md:hidden text-gray-600 hover:text-gray-900 focus:outline-none'>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              className='h-6 w-6'
+              fill='none'
+              viewBox='0 0 24 24'
+              stroke='currentColor'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth={2}
+                d='M4 6h16M4 12h16M4 18h16'
+              />
+            </svg>
+          </button>
         </div>
       </div>
     </nav>
