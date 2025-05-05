@@ -1,18 +1,16 @@
-import { useEffect, useRef } from "react";
-import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-
-import axios from "./axios";
+import { useEffect, useRef } from 'react';
+import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
+import axios from './axios';
 
 const useAxiosAuth = () => {
   const authHeader = useAuthHeader();
-
   const interceptorRef = useRef(null);
 
   useEffect(() => {
     interceptorRef.current = axios.interceptors.request.use(
       (config) => {
-        if (!config.headers["Authorization"]) {
-          config.headers["Authorization"] = authHeader;
+        if (!config.headers['Authorization'] && authHeader) {
+          config.headers['Authorization'] = authHeader;
         }
         return config;
       },
