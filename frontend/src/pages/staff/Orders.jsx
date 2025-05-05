@@ -26,7 +26,7 @@ export default function StaffOrdersPanel() {
     ]);
   
     const [selectedOrder, setSelectedOrder] = useState(null);
-  
+    const [enteredClaimCode, setEnteredClaimCode] = useState('');
     const handleVerify = () => {
       const updatedOrders = orders.map(order =>
         order.orderId === selectedOrder.orderId
@@ -205,6 +205,31 @@ export default function StaffOrdersPanel() {
             </div>
           </div>
         </div>
+
+        {/* Claim Code Verification */}
+        <div className="mt-6 mb-4">
+          <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+            <h4 className="font-semibold text-blue-800 mb-2">Verification Required</h4>
+            <p className="text-sm text-blue-700 mb-3">Please ask the customer for their claim code and enter it below:</p>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                placeholder="Enter claim code"
+                className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={enteredClaimCode}
+                onChange={(e) => setEnteredClaimCode(e.target.value)}
+              />
+              {enteredClaimCode === selectedOrder.claimCode && (
+                <span className="text-green-600 text-sm font-medium flex items-center">
+                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Code matches
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Modal Footer */}
@@ -217,7 +242,12 @@ export default function StaffOrdersPanel() {
         </button>
         <button
           onClick={handleVerify}
-          className="px-5 py-2 rounded-lg bg-[#111827] p-6 text-white hover:bg-[#34415C] p-6 text-white"
+          disabled={enteredClaimCode !== selectedOrder.claimCode}
+          className={`px-5 py-2 rounded-lg text-white transition-colors ${
+            enteredClaimCode === selectedOrder.claimCode 
+              ? 'bg-[#111827] hover:bg-[#34415C] cursor-pointer'
+              : 'bg-gray-400 cursor-not-allowed'
+          }`}
         >
           Verify Order
         </button>
