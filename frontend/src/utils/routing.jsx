@@ -30,6 +30,8 @@ import AddAnnouncement from '../components/Admin/Announcement/AddAnnouncement';
 import AuthorDescription from '../pages/user/AuthorDescription';
 import BooksManagementPage from '../pages/admin/BooksManagementPage';
 import AddBook from '../components/Admin/BooksManagement/AddBook';
+import StaffOrdersPanel from '../pages/staff/Orders';
+
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -42,6 +44,7 @@ const Layout = ({ children }) => {
     '/announcement',
     '/add-announcement',
     '/UserManagement',
+    '/StaffOrdersPanel'
   ];
   const isAuthPage = authPages.includes(location.pathname);
 
@@ -104,6 +107,9 @@ const Routing = () => {
             <Route path='/UserManagement' element={<UserManagement />} />
           </Route>
 
+
+          <Route path='StaffOrdersPanel' element={<StaffOrdersPanel />} />
+          
           {/* Static pages public */}
           <Route
             path='/about'
