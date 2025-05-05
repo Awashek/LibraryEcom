@@ -8,28 +8,28 @@ import {
 import TestConnection from '../pages/admin/TestConnection'; // adjust path
 import Login from '../pages/account/Login';
 import Register from '../pages/account/Register';
-import HomePage from '../pages/HomePage';
-import WishlistPage from '../pages/WishlistPage';
-import CartPage from '../pages/CartPage';
-import BookDetails from '../pages/BookDetails';
+import HomePage from '../pages/user/HomePage';
+import WishlistPage from '../pages/user/WishlistPage';
+import CartPage from '../pages/user/CartPage';
+import BookDetails from '../pages/user/BookDetails';
 import ProfileLayout from '../layouts/ProfileLayout';
-import ProfilePage from '../pages/profile/ProfilePage';
-import RentedBooksPage from '../pages/profile/RentedBooksPage';
-import BookedBooksPage from '../pages/profile/BookedBooksPage';
-import SavedBooksPage from '../pages/profile/SavedBooksPage';
-import BooksHistoryPage from '../pages/profile/BookHistoryPage';
+import ProfilePage from '../pages/user/profile/ProfilePage';
+import RentedBooksPage from '../pages/user/profile/RentedBooksPage';
+import BookedBooksPage from '../pages/user/profile/BookedBooksPage';
+import SavedBooksPage from '../pages/user/profile/SavedBooksPage';
+import BooksHistoryPage from '../pages/user/profile/BookHistoryPage';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import ProductsPage from '../pages/ProductsPage';
-import ProductForm from '../components/ProductForm';
-import DashboardPage from '../pages/DashboardPage';
-import AllBooksPage from '../pages/AllBooksPage';
-import GenresAndTheam from '../pages/GenresAndThem';
+import DashboardPage from '../pages/admin/DashboardPage';
+import AllBooksPage from '../pages/user/AllBooksPage';
+import GenresAndTheam from '../pages/user/GenresAndThem';
 import ProtectedRoute from './ProtectedRoute';
-import UserManagement from '../pages/UserManagement';
+import UserManagement from '../pages/admin/UserManagement';
 import AnnouncementPage from '../pages/admin/AnnouncementPage';
 import AddAnnouncement from '../components/Admin/Announcement/AddAnnouncement';
-import AuthorDescription from '../pages/AuthorDescription';
+import AuthorDescription from '../pages/user/AuthorDescription';
+import BooksManagementPage from '../pages/admin/BooksManagementPage';
+import AddBook from '../components/Admin/BooksManagement/AddBook';
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -37,8 +37,8 @@ const Layout = ({ children }) => {
     '/login',
     '/register',
     '/dashboard',
-    '/products',
-    '/productsform',
+    '/books-management',
+    '/add-book',
     '/announcement',
     '/add-announcement',
     '/UserManagement',
@@ -74,6 +74,7 @@ const Routing = () => {
           <Route path='/wishlist' element={<WishlistPage />} />
           <Route path='/cart' element={<CartPage />} />
           <Route path='/bookdetails' element={<BookDetails />} />
+          <Route path='authordescription' element={<AuthorDescription />} />
 
           {/* Profile routes */}
           <Route path='/profile' element={<ProfileLayout />}>
@@ -83,13 +84,6 @@ const Routing = () => {
             <Route path='saved' element={<SavedBooksPage />} />
             <Route path='history' element={<BooksHistoryPage />} />
           </Route>
-          <Route path='authordescription' element={<AuthorDescription />} />
-          <Route path='/wishlist' element={<WishlistPage />} />
-          <Route path='/cart' element={<CartPage />} />
-          <Route path='/bookdetails' element={<BookDetails />} />
-          <Route path='/products' element={<ProductsPage />} />
-          <Route path='/productsform' element={<ProductForm />} />
-          <Route path='/dashboard' element={<DashboardPage />} />
 
           {/* Profile routes */}
           <Route path='/profile' element={<ProfileLayout />}>
@@ -103,8 +97,8 @@ const Routing = () => {
           {/* Protected Routes for Admin only */}
           <Route element={<ProtectedRoute allowedRoles={['Admin']} />}>
             <Route path='/dashboard' element={<DashboardPage />} />
-            <Route path='/products' element={<ProductsPage />} />
-            <Route path='/productsform' element={<ProductForm />} />
+            <Route path='/books-management' element={<BooksManagementPage />} />
+            <Route path='/add-book' element={<AddBook />} />
             <Route path='/announcement' element={<AnnouncementPage />} />
             <Route path='/add-announcement' element={<AddAnnouncement />} />
             <Route path='/UserManagement' element={<UserManagement />} />
