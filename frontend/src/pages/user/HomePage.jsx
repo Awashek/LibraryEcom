@@ -4,7 +4,14 @@ import NewArrivals from '../../components/User/Books/NewArrivals';
 import { ArrowRight } from 'lucide-react';
 import PopularGenres from '../../components/User/Books/PopularGenres';
 import ReadsOnSale from '../../components/User/Books/ReadsOnSale';
+import { useNavigate } from 'react-router-dom';
 const HomePage = () => {
+
+  const navigate = useNavigate();
+
+  const handleExploreClick = () => {
+    navigate('/allbooks');
+  };
   // Mock data for featured books
   const [featuredBooks, setFeaturedBooks] = useState([
     {
@@ -84,7 +91,9 @@ const HomePage = () => {
                 Experience the joy of reading with us
               </p>
               <div className='mt-8 flex space-x-4'>
-                <button className='bg-white text-black py-2 px-8 rounded-full flex items-center gap-2 hover:gap-3 transition-all duration-200'>
+                <button 
+                onClick={handleExploreClick}
+                className='bg-white text-black py-2 px-8 rounded-full flex items-center gap-2 hover:gap-3 transition-all duration-200'>
                   Explore Now{' '}
                   <ArrowRight
                     size={18}
