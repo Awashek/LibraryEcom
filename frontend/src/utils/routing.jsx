@@ -32,6 +32,9 @@ import BooksManagementPage from '../pages/admin/BooksManagementPage';
 import AddBook from '../components/Admin/BooksManagement/AddBook';
 import StaffOrdersPanel from '../pages/staff/Orders';
 
+import AuthorsManagementPage from '../pages/admin/AuthorManagementPage';
+import AddAuthor from '../components/Admin/AuthorManagement/AddAuthor';
+import UpdateAuthor from '../components/Admin/AuthorManagement/UpdateAuthor';
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -44,7 +47,6 @@ const Layout = ({ children }) => {
     '/announcement',
     '/add-announcement',
     '/UserManagement',
-    '/StaffOrdersPanel'
   ];
   const isAuthPage = authPages.includes(location.pathname);
 
@@ -105,6 +107,12 @@ const Routing = () => {
             <Route path='/announcement' element={<AnnouncementPage />} />
             <Route path='/add-announcement' element={<AddAnnouncement />} />
             <Route path='/UserManagement' element={<UserManagement />} />
+            <Route
+              path='/author-management'
+              element={<AuthorsManagementPage />}
+            />
+            <Route path='/add-author' element={<AddAuthor />} />
+            <Route path='/edit-author' element={<UpdateAuthor />} />
           </Route>
 
 

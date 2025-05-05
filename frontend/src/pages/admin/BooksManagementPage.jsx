@@ -16,63 +16,6 @@ import AdminLayout from '../../layouts/AdminLayout';
 import useAxios from '../../utils/axios/useAxios';
 
 export default function BooksManagementPage() {
-  // const [products, setProducts] = useState([
-  //   {
-  //     id: 'ISBN-9780140449136',
-  //     title: 'The Odyssey',
-  //     author: 'Homer',
-  //     price: 10.99,
-  //     stock: 230,
-  //     status: 'Active',
-  //     image: '../images/placeholder-book.jpg',
-  //   },
-  //   {
-  //     id: 'ISBN-9780679783268',
-  //     title: 'Pride and Prejudice',
-  //     author: 'Jane Austen',
-  //     price: 8.49,
-  //     stock: 120,
-  //     status: 'Active',
-  //     image: '../images/placeholder-book.jpg',
-  //   },
-  //   {
-  //     id: 'ISBN-9780743273565',
-  //     title: 'The Great Gatsby',
-  //     author: 'F. Scott Fitzgerald',
-  //     price: 9.99,
-  //     stock: 75,
-  //     status: 'Active',
-  //     image: '../images/placeholder-book.jpg',
-  //   },
-  //   {
-  //     id: 'ISBN-9780439023528',
-  //     title: 'The Hunger Games',
-  //     author: 'Suzanne Collins',
-  //     price: 12.99,
-  //     stock: 310,
-  //     status: 'Active',
-  //     image: '../images/placeholder-book.jpg',
-  //   },
-  //   {
-  //     id: 'ISBN-9780142437230',
-  //     title: 'Moby-Dick',
-  //     author: 'Herman Melville',
-  //     price: 11.5,
-  //     stock: 60,
-  //     status: 'Active',
-  //     image: '../images/placeholder-book.jpg',
-  //   },
-  //   {
-  //     id: 'ISBN-9780061120084',
-  //     title: 'To Kill a Mockingbird',
-  //     author: 'Harper Lee',
-  //     price: 7.99,
-  //     stock: 150,
-  //     status: 'Active',
-  //     image: '../images/placeholder-book.jpg',
-  //   },
-  // ]);
-
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 10;
 

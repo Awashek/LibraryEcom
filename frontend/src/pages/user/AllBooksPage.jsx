@@ -1,186 +1,84 @@
 import React, { useState, useEffect } from 'react';
 import Pagination from '../../components/common/Pagination';
+import useAxios from '../../utils/axios/useAxios';
+import { useNavigate } from 'react-router-dom';
 
 const AllBooksPage = () => {
-  // Sample books data
-  const allBooks = [
-    {
-      id: 1,
-      title: 'The History of a Difficult Child',
-      author: 'Mihret Sibhat',
-      coverImage:
-        'https://m.media-amazon.com/images/I/91xWXZRx2hL._UF894,1000_QL80_.jpg',
-      status: 'Available',
-    },
-    {
-      id: 2,
-      title: "Harry Potter And The Philosopher's Stone",
-      author: 'J K Rowling',
-      coverImage:
-        'https://images.justwatch.com/poster/87608067/s718/harry-potter-and-the-philosophers-stone.jpg',
-      status: 'Available',
-    },
-    {
-      id: 3,
-      title: 'Pride and Prejudice',
-      author: 'Jane Austen',
-      coverImage:
-        'https://m.media-amazon.com/images/M/MV5BMTA1NDQ3NTcyOTNeQTJeQWpwZ15BbWU3MDA0MzA4MzE@._V1_.jpg',
-      status: 'Available',
-    },
-    {
-      id: 4,
-      title: 'The fault in our stars',
-      author: 'John Green',
-      coverImage:
-        'https://m.media-amazon.com/images/M/MV5BYTA4ODg5YWUtYmZiYy00Y2M4LWE0NjEtODE5MzhkYmJmZGEwXkEyXkFqcGc@._V1_.jpg',
-      status: 'Booked',
-    },
-    {
-      id: 5,
-      title: 'Nightmare Island',
-      author: 'Shakirah Bourne',
-      coverImage:
-        'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQVhs0zWJkL9afwN2gqJJ3vtmX4yJVAeZchddbahTVkHzCi9fyKtXwj0OEcznWUsFRn_VKd',
-      status: 'Booked',
-    },
-    {
-      id: 6,
-      title: 'Pride and Prejudice',
-      author: 'Jane Austen',
-      coverImage:
-        'https://m.media-amazon.com/images/M/MV5BMTA1NDQ3NTcyOTNeQTJeQWpwZ15BbWU3MDA0MzA4MzE@._V1_.jpg',
-      status: 'Available',
-    },
-    {
-      id: 7,
-      title: "Harry Potter And The Philosopher's Stone",
-      author: 'J K Rowling',
-      coverImage:
-        'https://images.justwatch.com/poster/87608067/s718/harry-potter-and-the-philosophers-stone.jpg',
-      status: 'Available',
-    },
-    {
-      id: 8,
-      title: 'Nightmare Island',
-      author: 'Shakirah Bourne',
-      coverImage:
-        'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQVhs0zWJkL9afwN2gqJJ3vtmX4yJVAeZchddbahTVkHzCi9fyKtXwj0OEcznWUsFRn_VKd',
-      status: 'Booked',
-    },
-    {
-      id: 9,
-      title: 'Pride and Prejudice',
-      author: 'Jane Austen',
-      coverImage:
-        'https://m.media-amazon.com/images/M/MV5BMTA1NDQ3NTcyOTNeQTJeQWpwZ15BbWU3MDA0MzA4MzE@._V1_.jpg',
-      status: 'Available',
-    },
-    {
-      id: 10,
-      title: "Harry Potter And The Philosopher's Stone",
-      author: 'J K Rowling',
-      coverImage:
-        'https://images.justwatch.com/poster/87608067/s718/harry-potter-and-the-philosophers-stone.jpg',
-      status: 'Available',
-    },
-    // Add more books to create multiple pages
-    {
-      id: 11,
-      title: 'Nightmare Island',
-      author: 'Shakirah Bourne',
-      coverImage:
-        'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQVhs0zWJkL9afwN2gqJJ3vtmX4yJVAeZchddbahTVkHzCi9fyKtXwj0OEcznWUsFRn_VKd',
-      status: 'Booked',
-    },
-    {
-      id: 12,
-      title: 'Pride and Prejudice',
-      author: 'Jane Austen',
-      coverImage:
-        'https://m.media-amazon.com/images/M/MV5BMTA1NDQ3NTcyOTNeQTJeQWpwZ15BbWU3MDA0MzA4MzE@._V1_.jpg',
-      status: 'Available',
-    },
-    {
-      id: 13,
-      title: "Harry Potter And The Philosopher's Stone",
-      author: 'J K Rowling',
-      coverImage:
-        'https://images.justwatch.com/poster/87608067/s718/harry-potter-and-the-philosophers-stone.jpg',
-      status: 'Available',
-    },
-    {
-      id: 14,
-      title: 'Nightmare Island',
-      author: 'Shakirah Bourne',
-      coverImage:
-        'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQVhs0zWJkL9afwN2gqJJ3vtmX4yJVAeZchddbahTVkHzCi9fyKtXwj0OEcznWUsFRn_VKd',
-      status: 'Booked',
-    },
-    {
-      id: 15,
-      title: 'Pride and Prejudice',
-      author: 'Jane Austen',
-      coverImage:
-        'https://m.media-amazon.com/images/M/MV5BMTA1NDQ3NTcyOTNeQTJeQWpwZ15BbWU3MDA0MzA4MzE@._V1_.jpg',
-      status: 'Available',
-    },
-    {
-      id: 16,
-      title: "Harry Potter And The Philosopher's Stone",
-      author: 'J K Rowling',
-      coverImage:
-        'https://images.justwatch.com/poster/87608067/s718/harry-potter-and-the-philosophers-stone.jpg',
-      status: 'Available',
-    },
-  ];
-
   // State for search, sort, pagination
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortOption, setSortOption] = useState('Lastest Update');
+  const [sortOption, setSortOption] = useState('Latest Update');
   const [currentPage, setCurrentPage] = useState(1);
-  const [filteredBooks, setFilteredBooks] = useState([]);
+  const [books, setBooks] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const navigate = useNavigate();
+  const pageSize = 12;
 
-  const booksPerPage = 10;
-  const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
+  const { data: booksData, refetch } = useAxios(
+    `book?pageNumber=${currentPage}&pageSize=${pageSize}&search=${searchQuery}`
+  );
 
   useEffect(() => {
-    let result = [...allBooks];
-
-    // Apply search filter
-    if (searchQuery) {
-      result = result.filter(
-        (book) =>
-          book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          book.author.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+    if (booksData) {
+      setBooks(booksData.result || []);
+      setTotalCount(booksData.totalCount || 0); // Changed from rowCount to totalCount
     }
+  }, [booksData]);
 
-    // Apply sorting
+  useEffect(() => {
+    // Refetch data when search query or page changes
+    refetch();
+  }, [searchQuery, currentPage, refetch]);
+
+  // Format book data for UI
+  const formatBookData = (book) => {
+    return {
+      id: book.id, // Changed from Id to id
+      title: book.title, // Changed from Title to title
+      // Handle empty authors array
+      author:
+        book.authors && book.authors.length > 0
+          ? book.authors.map((a) => a.name).join(', ')
+          : 'Unknown Author',
+      // Use a default cover image
+      coverImage: 'https://via.placeholder.com/150x200?text=No+Cover',
+      status: book.isAvailable ? 'Available' : 'Booked', // Changed from IsAvailable to isAvailable
+      price: book.basePrice, // Changed from BasePrice to basePrice
+      discount: book.discount,
+      genre: book.genre,
+      language: book.language,
+      publicationDate: book.publicationDate, // Added for sorting
+    };
+  };
+
+  // Apply sorting to the formatted books data
+  const sortedBooks = React.useMemo(() => {
+    const formattedBooks = books.map(formatBookData);
+
     switch (sortOption) {
       case 'Latest Update':
-        // Assuming books are already sorted by latest first
-        break;
+        // Sort by publication date (newest first)
+        return [...formattedBooks].sort(
+          (a, b) => new Date(b.publicationDate) - new Date(a.publicationDate)
+        );
       case 'Title A-Z':
-        result.sort((a, b) => a.title.localeCompare(b.title));
-        break;
+        return [...formattedBooks].sort((a, b) =>
+          a.title.localeCompare(b.title)
+        );
       case 'Title Z-A':
-        result.sort((a, b) => b.title.localeCompare(a.title));
-        break;
+        return [...formattedBooks].sort((a, b) =>
+          b.title.localeCompare(a.title)
+        );
       case 'Author A-Z':
-        result.sort((a, b) => a.author.localeCompare(b.author));
-        break;
+        return [...formattedBooks].sort((a, b) =>
+          a.author.localeCompare(b.author)
+        );
       default:
-        break;
+        return formattedBooks;
     }
+  }, [books, sortOption]);
 
-    setFilteredBooks(result);
-  }, [searchQuery, sortOption]); // Removed allBooks from dependencies
-
-  // Get current books for current page
-  const indexOfLastBook = currentPage * booksPerPage;
-  const indexOfFirstBook = indexOfLastBook - booksPerPage;
-  const currentBooks = filteredBooks.slice(indexOfFirstBook, indexOfLastBook);
+  // Calculate total pages using totalCount from API
+  const totalPages = booksData?.totalPages || 1;
 
   // Change page
   const handlePageChange = (pageNumber) => {
@@ -217,7 +115,10 @@ const AllBooksPage = () => {
                 placeholder='Search by title, author...'
                 className='block w-full pl-10 pr-3 py-2 border border-gray-700 rounded-md bg-white text-black placeholder-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500'
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
               />
             </div>
           </div>
@@ -249,45 +150,70 @@ const AllBooksPage = () => {
         </div>
 
         {/* Books Grid */}
-        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6'>
-          {currentBooks.map((book) => (
-            <div key={book.id} className='flex flex-col'>
-              <div className='relative pb-[150%] overflow-hidden'>
-                {/* Use placeholder images for demo */}
-                <div className='absolute inset-0 bg-gray-700'>
-                  <div className='w-full h-full flex items-center justify-center'>
-                    <div className='text-center'>
-                      {/* This div simulates the cover image */}
-                      <div className='w-full h-full absolute inset-0'>
-                        <img
-                          src={book.coverImage}
-                          alt={book.title}
-                          className='w-full h-full object-cover'
-                        />
+        {sortedBooks.length > 0 ? (
+          <>
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6'>
+              {sortedBooks.map((book) => (
+                <div key={book.id} className='flex flex-col'>
+                  <div className='relative pb-[150%] overflow-hidden'>
+                    <div className='absolute inset-0 bg-gray-700'>
+                      <div className='w-full h-full flex items-center justify-center'>
+                        <div className='text-center'>
+                          <div className='w-full h-full absolute inset-0'>
+                            <img
+                              src={book.coverImage}
+                              alt={book.title}
+                              className='w-full h-full object-cover'
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
+                    <div
+                      className={`absolute bottom-0 left-0 px-2 py-1 m-2 text-xs font-medium ${
+                        book.status === 'Available'
+                          ? 'bg-green-600'
+                          : 'bg-red-600'
+                      }`}
+                    >
+                      {book.status}
+                    </div>
                   </div>
+                  <h3 className='mt-2 text-sm font-medium'>{book.title}</h3>
+                  <p className='text-xs text-gray-400'>{book.author}</p>
+                  {book.discount ? (
+                    <div className='flex items-center mt-1'>
+                      <span className='text-sm line-through text-gray-400 mr-2'>
+                        ${book.price.toFixed(2)}
+                      </span>
+                      <span className='text-sm font-medium'>
+                        $
+                        {(
+                          book.price *
+                          (1 - book.discount.percentage / 100)
+                        ).toFixed(2)}
+                      </span>
+                    </div>
+                  ) : (
+                    <span className='text-sm font-medium mt-1'>
+                      ${book.price.toFixed(2)}
+                    </span>
+                  )}
                 </div>
-                <div
-                  className={`absolute bottom-0 left-0 px-2 py-1 m-2 text-xs font-medium ${
-                    book.status === 'Available' ? 'bg-green-600' : 'bg-red-600'
-                  }`}
-                >
-                  {book.status}
-                </div>
-              </div>
-              <h3 className='mt-2 text-sm font-medium'>{book.title}</h3>
-              <p className='text-xs text-gray-400'>{book.author}</p>
+              ))}
             </div>
-          ))}
-        </div>
 
-        {/* Pagination */}
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </>
+        ) : (
+          <div className='text-center py-12'>
+            <p className='text-xl'>No books found</p>
+          </div>
+        )}
       </div>
     </div>
   );
