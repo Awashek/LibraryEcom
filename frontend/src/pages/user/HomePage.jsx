@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
-
-import NewArrivals from '../../components/User/Books/NewArrivals';
 import { ArrowRight } from 'lucide-react';
 import PopularGenres from '../../components/User/Books/PopularGenres';
-import ReadsOnSale from '../../components/User/Books/ReadsOnSale';
+import ReadesOnSale from '../../components/User/Books/ReadesOnSale';
 import { useNavigate } from 'react-router-dom';
 const HomePage = () => {
 
@@ -114,9 +112,8 @@ const HomePage = () => {
           </div>
         </div>
       </div>
-      <NewArrivals />
+    <ReadesOnSale />
       <PopularGenres />
-      <ReadsOnSale />
     </div>
   );
 };

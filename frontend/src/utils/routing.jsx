@@ -78,6 +78,7 @@ const Routing = () => {
           <Route path='/register' element={<Register />} />
           <Route path='genresandthem' element={<GenresAndTheam />} />
 
+
           {/* Protected Routes for Users (regular users) */}
           <Route element={<ProtectedRoute allowedRoles={['User']} />} />
           <Route path='/wishlist' element={<WishlistPage />} />
