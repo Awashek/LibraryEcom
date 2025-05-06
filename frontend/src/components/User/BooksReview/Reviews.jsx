@@ -25,9 +25,6 @@ const ReviewCard = ({ rating, comment, userName }) => {
         </div>
       </div>
       <p className='text-sm text-gray-600'>{comment}</p>
-      <div className='flex items-center text-gray-400 text-xs mt-1'>
-        <button className='hover:text-gray-600'>Respond</button>
-      </div>
     </div>
   );
 };
@@ -53,30 +50,6 @@ const Reviews = () => {
 
   return (
     <div>
-      <h2 className='text-xl font-bold mb-6'>Reviews</h2>
-
-      {/* Add Comment Section */}
-      <div className='flex items-center gap-3 mb-6'>
-        <div className='w-10 h-10 rounded-full bg-gray-200'></div>
-        <div className='flex-1'>
-          <div className='flex mb-2'>
-            {[1, 2, 3, 4, 5].map((star) => (
-              <Star key={star} size={16} className='text-gray-300' />
-            ))}
-          </div>
-          <div className='flex w-full'>
-            <input
-              type='text'
-              placeholder='Comment'
-              className='flex-1 px-3 py-1 border border-gray-300 rounded-l text-sm focus:outline-none'
-            />
-            <button className='bg-gray-200 text-gray-700 px-3 py-1 rounded-r text-sm border border-l-0 border-gray-300'>
-              Send
-            </button>
-          </div>
-        </div>
-      </div>
-
       {/* Reviews List */}
       {reviews.map((review) => (
         <ReviewCard

@@ -152,7 +152,7 @@ export default function AddBook({ onClose, onSuccess }) {
   };
 
   return (
-    <div className='fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center overflow-hidden'>
+    <div className='fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center overflow-hidden'>
       <div
         className='bg-white rounded-lg shadow-xl w-full max-w-6xl h-screen max-h-[95vh] flex flex-col'
         onClick={handleModalClick}
@@ -178,7 +178,6 @@ export default function AddBook({ onClose, onSuccess }) {
                 {/* Book Details */}
                 <div className='bg-white p-5 rounded-lg shadow-sm border border-gray-200'>
                   <h2 className='text-lg font-semibold mb-4 flex items-center text-indigo-700'>
-                    <BookOpen size={18} className='mr-2' />
                     Book Details
                   </h2>
 

@@ -12,22 +12,29 @@ import {
   FileText,
   ChevronLeft,
   ChevronRight,
+  X,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import AdminLayout from '../../layouts/AdminLayout';
 import useAxios from '../../utils/axios/useAxios';
 import AddBook from '../../components/Admin/BooksManagement/AddBook';
 import EditBook from '../../components/Admin/BooksManagement/EditBook';
+import { toast } from 'react-toastify';
+import useAxiosAuth from '../../utils/axios/useAxiosAuth';
 
 export default function BooksManagementPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [bookToDelete, setBookToDelete] = useState(null);
   const [editingBookId, setEditingBookId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [filterStatus, setFilterStatus] = useState('all');
   const totalPages = 10;
+  const axios = useAxiosAuth();
 
   const pageSize = 12;
   const navigate = useNavigate();
@@ -52,16 +59,34 @@ export default function BooksManagementPage() {
     setShowEditModal(true);
   };
 
-  const handleDelete = (productId, productName) => {
-    if (window.confirm(`Delete "${productName}" permanently?`)) {
-      setProducts(products.filter((product) => product.id !== productId));
-      refetch();
-    }
+  // Add this function to open the delete confirmation modal
+  const handleDelete = (bookId, bookTitle) => {
+    setBookToDelete({ id: bookId, title: bookTitle });
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    setIsDeleting(true);
+    axios
+      .delete(`/api/book/${bookToDelete.id}`)
+      .then(() => {
+        setProducts(products.filter((book) => book.id !== bookToDelete.id));
+        toast.success('Book deleted successfully');
+        refetch();
+      })
+      .catch((error) => {
+        toast.error('Failed to delete book');
+      })
+      .finally(() => {
+        setIsDeleteModalOpen(false);
+        setBookToDelete(null);
+        setIsDeleting(false);
+      });
   };
 
   // Disable body scroll when modal is open
   useEffect(() => {
-    if (showAddModal) {
+    if (showAddModal || showEditModal || isDeleteModalOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'auto';
@@ -70,7 +95,7 @@ export default function BooksManagementPage() {
     return () => {
       document.body.style.overflow = 'auto';
     };
-  }, [showAddModal]);
+  }, [showAddModal, showEditModal, isDeleteModalOpen]);
 
   const filteredProducts =
     filterStatus === 'all'
@@ -284,6 +309,7 @@ export default function BooksManagementPage() {
         />
       )}
 
+      {/* Edit Book Modal */}
       {showEditModal && (
         <EditBook
           bookId={editingBookId}
@@ -297,6 +323,57 @@ export default function BooksManagementPage() {
             refetch();
           }}
         />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {isDeleteModalOpen && (
+        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
+          <div className='bg-white rounded-lg w-full max-w-sm mx-4 p-6 shadow-xl'>
+            <div className='flex justify-between items-center mb-4'>
+              <h3 className='text-lg font-medium text-gray-900'>
+                Confirm Delete
+              </h3>
+              <button
+                onClick={() => setIsDeleteModalOpen(false)}
+                className='text-gray-400 hover:text-gray-500'
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className='mt-3 text-center'>
+              <p className='text-sm text-gray-500 mb-6'>
+                Are you sure you want to delete "
+                <span className='font-medium'>{bookToDelete?.title}</span>"?
+                This action cannot be undone.
+              </p>
+
+              <div className='flex space-x-3 justify-center'>
+                <button
+                  onClick={() => setIsDeleteModalOpen(false)}
+                  className='px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 focus:outline-none'
+                  disabled={isDeleting}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteConfirm}
+                  className='px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none flex items-center justify-center'
+                  disabled={isDeleting}
+                >
+                  {isDeleting ? (
+                    <>
+                      <span className='animate-spin mr-2'>⚪</span>
+                      Deleting...
+                    </>
+                  ) : (
+                    <>Delete</>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

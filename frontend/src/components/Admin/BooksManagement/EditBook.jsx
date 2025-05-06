@@ -31,7 +31,7 @@ export default function EditBook({ bookId, onClose, onSuccess }) {
     basePrice: '',
     genre: '',
     language: '',
-    isAvailable: true,
+    isAvailable: 'true',
   });
   const [coverImage, setCoverImage] = useState(null);
   const [coverImagePreview, setCoverImagePreview] = useState(null);
@@ -39,10 +39,11 @@ export default function EditBook({ bookId, onClose, onSuccess }) {
   const [showAuthorDropdown, setShowAuthorDropdown] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const axios = useAxiosAuth();
-
-  const { data: bookData, refetch } = useAxios(`book/${bookId}`);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 12;
+
+  // Fetch book data
+  const { data: bookData, refetch } = useAxios(`book/${bookId}`);
 
   // Fetch authors using useAxios hook
   const { data: authors } = useAxios(
@@ -54,97 +55,65 @@ export default function EditBook({ bookId, onClose, onSuccess }) {
     if (bookId) {
       refetch();
     }
-  }, [bookId]);
+  }, [bookId, refetch]);
 
+  // Format mappings for dropdown values
   const mapBookFormatToValue = (format) => {
-    switch (format) {
-      case 'Paperback':
-        return '1';
-      case 'Hardcover':
-        return '2';
-      case 'SignedEdition':
-        return '3';
-      case 'LimitedEdition':
-        return '4';
-      case 'FirstEdition':
-        return '5';
-      case 'CollectorsEdition':
-        return '6';
-      case 'AuthorsEdition':
-        return '7';
-      case 'DeluxeEdition':
-        return '8';
-      default:
-        return '';
-    }
+    const formatMap = {
+      Paperback: '1',
+      Hardcover: '2',
+      SignedEdition: '3',
+      LimitedEdition: '4',
+      FirstEdition: '5',
+      CollectorsEdition: '6',
+      AuthorsEdition: '7',
+      DeluxeEdition: '8',
+    };
+    return formatMap[format] || '';
   };
 
   const mapGenreToValue = (genre) => {
-    switch (genre) {
-      case 'Fiction':
-        return '1';
-      case 'Non-Fiction':
-        return '2';
-      case 'Mystery':
-        return '3';
-      case 'Thriller':
-        return '4';
-      case 'Romance':
-        return '5';
-      case 'Fantasy':
-        return '6';
-      case 'Science Fiction':
-        return '7';
-      case 'Biography':
-        return '8';
-      case 'History':
-        return '9';
-      case 'Education':
-        return '10';
-      case 'Horror':
-        return '11';
-      default:
-        return '';
-    }
+    const genreMap = {
+      Fiction: '1',
+      'Non-Fiction': '2',
+      Mystery: '3',
+      Thriller: '4',
+      Romance: '5',
+      Fantasy: '6',
+      'Science Fiction': '7',
+      Biography: '8',
+      History: '9',
+      Education: '10',
+      Horror: '11',
+    };
+    return genreMap[genre] || '';
   };
 
   const mapLanguageToValue = (language) => {
-    switch (language) {
-      case 'English':
-        return '1';
-      case 'Nepali':
-        return '2';
-      case 'Hindi':
-        return '3';
-      case 'Spanish':
-        return '4';
-      case 'French':
-        return '5';
-      case 'German':
-        return '6';
-      case 'Chinese':
-        return '7';
-      case 'Japanese':
-        return '8';
-      case 'Korean':
-        return '9';
-      case 'Arabic':
-        return '10';
-      case 'Russian':
-        return '11';
-      case 'Portuguese':
-        return '12';
-      case 'Italian':
-        return '13';
-      default:
-        return '';
-    }
+    const languageMap = {
+      English: '1',
+      Nepali: '2',
+      Hindi: '3',
+      Spanish: '4',
+      French: '5',
+      German: '6',
+      Chinese: '7',
+      Japanese: '8',
+      Korean: '9',
+      Arabic: '10',
+      Russian: '11',
+      Portuguese: '12',
+      Italian: '13',
+    };
+    return languageMap[language] || '';
   };
 
-  // Then update your form data population in the useEffect:
+  // Update form data when book data is loaded
   useEffect(() => {
     if (bookData?.result) {
       const book = bookData.result;
+      console.log('Loaded book data:', book);
+
       setFormData({
         title: book.title || '',
         authorIds: book.authors?.map((author) => author.id) || [],
@@ -154,9 +123,9 @@ export default function EditBook({ bookId, onClose, onSuccess }) {
         publicationDate: book.publicationDate
           ? book.publicationDate.split('T')[0]
           : '',
-        pageCount: book.pageCount || '',
+        pageCount: book.pageCount?.toString() || '',
         bookFormat: mapBookFormatToValue(book.bookFormat) || '',
-        basePrice: book.basePrice || '',
+        basePrice: book.basePrice?.toString() || '',
         genre: mapGenreToValue(book.genre) || '',
         language: mapLanguageToValue(book.language) || '',
         isAvailable: book.isAvailable ? 'true' : 'false',
@@ -234,25 +203,37 @@ export default function EditBook({ bookId, onClose, onSuccess }) {
 
     setIsSubmitting(true);
 
-    // Create the FormData structure that matches your API expectations
     const formDataToSend = new FormData();
 
-    // Append all form fields
-    Object.entries(formData).forEach(([key, value]) => {
-      if (key === 'authorIds') {
-        value.forEach((id) => formDataToSend.append('AuthorIds', id));
-      } else if (value !== '') {
-        formDataToSend.append(key, value);
-      }
+    // Append all form fields - using the same case pattern as AddBook component
+    formDataToSend.append('title', formData.title);
+    formDataToSend.append('publisherName', formData.publisherName);
+    formDataToSend.append('description', formData.description);
+    formDataToSend.append('isbn', formData.isbn);
+    formDataToSend.append('publicationDate', formData.publicationDate);
+    formDataToSend.append('pageCount', formData.pageCount);
+    formDataToSend.append('bookFormat', formData.bookFormat);
+    formDataToSend.append('basePrice', formData.basePrice);
+    formDataToSend.append('genre', formData.genre);
+    formDataToSend.append('language', formData.language);
+    formDataToSend.append('isAvailable', formData.isAvailable);
+
+    // Append author IDs - using the same approach as AddBook
+    formData.authorIds.forEach((id) => {
+      formDataToSend.append('authorIds', id);
     });
 
     // Append cover image if exists
     if (coverImage) {
-      formDataToSend.append('CoverImage', coverImage);
+      formDataToSend.append('coverImage', coverImage);
     }
 
     axios
-      .put(`/api/book/${bookId}`, formDataToSend)
+      .put(`/api/book/${bookId}`, formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
       .then((response) => {
         toast.success('Book updated successfully!');
         if (onSuccess) {
@@ -261,7 +242,7 @@ export default function EditBook({ bookId, onClose, onSuccess }) {
       })
       .catch((error) => {
         console.error('Error updating book:', error);
-        toast.error(error.response?.message || 'Failed to update book');
+        toast.error(error.response?.data?.message || 'Failed to update book');
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -310,7 +291,6 @@ export default function EditBook({ bookId, onClose, onSuccess }) {
                 {/* Book Details */}
                 <div className='bg-white p-5 rounded-lg shadow-sm border border-gray-200'>
                   <h2 className='text-lg font-semibold mb-4 flex items-center text-indigo-700'>
-                    <BookOpen size={18} className='mr-2' />
                     Book Details
                   </h2>
 
@@ -615,16 +595,11 @@ export default function EditBook({ bookId, onClose, onSuccess }) {
                   <select
                     name='isAvailable'
                     value={formData.isAvailable}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        isAvailable: e.target.value === 'true',
-                      })
-                    }
+                    onChange={handleChange}
                     className='w-full p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 appearance-none mb-4'
                   >
-                    <option value={true}>Available</option>
-                    <option value={false}>Not Available</option>
+                    <option value='true'>Available</option>
+                    <option value='false'>Not Available</option>
                   </select>
 
                   <h2 className='text-lg font-semibold mb-4 flex items-center text-indigo-700'>
