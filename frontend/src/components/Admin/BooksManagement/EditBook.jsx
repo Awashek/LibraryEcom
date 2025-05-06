@@ -18,7 +18,7 @@ import useAxiosAuth from '../../../utils/axios/useAxiosAuth';
 import useAxios from '../../../utils/axios/useAxios';
 import { toast } from 'react-toastify';
 
-export default function AddBook({ onClose, onSuccess }) {
+export default function EditBook({ bookId, onClose, onSuccess }) {
   const [formData, setFormData] = useState({
     title: '',
     authorIds: [],
@@ -31,12 +31,16 @@ export default function AddBook({ onClose, onSuccess }) {
     basePrice: '',
     genre: '',
     language: '',
-    isAvailable: 'true',
+    isAvailable: true,
   });
   const [coverImage, setCoverImage] = useState(null);
+  const [coverImagePreview, setCoverImagePreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAuthorDropdown, setShowAuthorDropdown] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const axios = useAxiosAuth();
+
+  const { data: bookData, refetch } = useAxios(`book/${bookId}`);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 12;
 
@@ -44,6 +48,126 @@ export default function AddBook({ onClose, onSuccess }) {
   const { data: authors } = useAxios(
     `author?pageNumber=${currentPage}&pageSize=${pageSize}&search=`
   );
+
+  // Load book data when component mounts or bookId changes
+  useEffect(() => {
+    if (bookId) {
+      refetch();
+    }
+  }, [bookId]);
+
+  const mapBookFormatToValue = (format) => {
+    switch (format) {
+      case 'Paperback':
+        return '1';
+      case 'Hardcover':
+        return '2';
+      case 'SignedEdition':
+        return '3';
+      case 'LimitedEdition':
+        return '4';
+      case 'FirstEdition':
+        return '5';
+      case 'CollectorsEdition':
+        return '6';
+      case 'AuthorsEdition':
+        return '7';
+      case 'DeluxeEdition':
+        return '8';
+      default:
+        return '';
+    }
+  };
+
+  const mapGenreToValue = (genre) => {
+    switch (genre) {
+      case 'Fiction':
+        return '1';
+      case 'Non-Fiction':
+        return '2';
+      case 'Mystery':
+        return '3';
+      case 'Thriller':
+        return '4';
+      case 'Romance':
+        return '5';
+      case 'Fantasy':
+        return '6';
+      case 'Science Fiction':
+        return '7';
+      case 'Biography':
+        return '8';
+      case 'History':
+        return '9';
+      case 'Education':
+        return '10';
+      case 'Horror':
+        return '11';
+      default:
+        return '';
+    }
+  };
+
+  const mapLanguageToValue = (language) => {
+    switch (language) {
+      case 'English':
+        return '1';
+      case 'Nepali':
+        return '2';
+      case 'Hindi':
+        return '3';
+      case 'Spanish':
+        return '4';
+      case 'French':
+        return '5';
+      case 'German':
+        return '6';
+      case 'Chinese':
+        return '7';
+      case 'Japanese':
+        return '8';
+      case 'Korean':
+        return '9';
+      case 'Arabic':
+        return '10';
+      case 'Russian':
+        return '11';
+      case 'Portuguese':
+        return '12';
+      case 'Italian':
+        return '13';
+      default:
+        return '';
+    }
+  };
+
+  // Then update your form data population in the useEffect:
+  useEffect(() => {
+    if (bookData?.result) {
+      const book = bookData.result;
+      setFormData({
+        title: book.title || '',
+        authorIds: book.authors?.map((author) => author.id) || [],
+        publisherName: book.publisherName || '',
+        description: book.description || '',
+        isbn: book.isbn || '',
+        publicationDate: book.publicationDate
+          ? book.publicationDate.split('T')[0]
+          : '',
+        pageCount: book.pageCount || '',
+        bookFormat: mapBookFormatToValue(book.bookFormat) || '',
+        basePrice: book.basePrice || '',
+        genre: mapGenreToValue(book.genre) || '',
+        language: mapLanguageToValue(book.language) || '',
+        isAvailable: book.isAvailable ? 'true' : 'false',
+      });
+
+      if (book.coverImage) {
+        setCoverImagePreview(`http://localhost:7226/images/${book.coverImage}`);
+      }
+      setIsLoading(false);
+    }
+  }, [bookData]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -79,6 +203,7 @@ export default function AddBook({ onClose, onSuccess }) {
     const file = e.target.files[0];
     if (file) {
       setCoverImage(file);
+      setCoverImagePreview(URL.createObjectURL(file));
     }
   };
 
@@ -109,6 +234,7 @@ export default function AddBook({ onClose, onSuccess }) {
 
     setIsSubmitting(true);
 
+    // Create the FormData structure that matches your API expectations
     const formDataToSend = new FormData();
 
     // Append all form fields
@@ -126,20 +252,16 @@ export default function AddBook({ onClose, onSuccess }) {
     }
 
     axios
-      .post('/api/book', formDataToSend, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
+      .put(`/api/book/${bookId}`, formDataToSend)
       .then((response) => {
-        toast.success('Book added successfully!');
+        toast.success('Book updated successfully!');
         if (onSuccess) {
           onSuccess();
         }
       })
       .catch((error) => {
-        console.error('Error adding book:', error);
-        toast.error(error.response?.data?.message || 'Failed to add book');
+        console.error('Error updating book:', error);
+        toast.error(error.response?.message || 'Failed to update book');
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -151,6 +273,16 @@ export default function AddBook({ onClose, onSuccess }) {
     e.stopPropagation();
   };
 
+  if (isLoading) {
+    return (
+      <div className='fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center'>
+        <div className='bg-white rounded-lg p-6'>
+          <p>Loading book data...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className='fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center overflow-hidden'>
       <div
@@ -159,7 +291,7 @@ export default function AddBook({ onClose, onSuccess }) {
       >
         <div className='sticky top-0 z-10 bg-white p-4 border-b border-gray-200 flex justify-between items-center'>
           <div className='flex items-center'>
-            <h1 className='text-xl font-bold text-gray-800'>Add New Book</h1>
+            <h1 className='text-xl font-bold text-gray-800'>Edit Book</h1>
           </div>
           <button
             onClick={onClose}
@@ -240,9 +372,9 @@ export default function AddBook({ onClose, onSuccess }) {
                         </span>
                       </div>
 
-                      {showAuthorDropdown && (
+                      {showAuthorDropdown && authors?.result && (
                         <div className='absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto'>
-                          {authors?.result?.map((author) => (
+                          {authors.result.map((author) => (
                             <div
                               key={author.id}
                               className='p-2 hover:bg-gray-100'
@@ -483,11 +615,16 @@ export default function AddBook({ onClose, onSuccess }) {
                   <select
                     name='isAvailable'
                     value={formData.isAvailable}
-                    onChange={handleChange}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        isAvailable: e.target.value === 'true',
+                      })
+                    }
                     className='w-full p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 appearance-none mb-4'
                   >
-                    <option value='true'>Available</option>
-                    <option value='false'>Not Available</option>
+                    <option value={true}>Available</option>
+                    <option value={false}>Not Available</option>
                   </select>
 
                   <h2 className='text-lg font-semibold mb-4 flex items-center text-indigo-700'>
@@ -496,10 +633,10 @@ export default function AddBook({ onClose, onSuccess }) {
                   </h2>
                   <div>
                     <label className='flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-indigo-400 transition-colors bg-gray-50'>
-                      {coverImage ? (
+                      {coverImagePreview ? (
                         <div className='w-full h-full overflow-hidden rounded-lg'>
                           <img
-                            src={URL.createObjectURL(coverImage)}
+                            src={coverImagePreview}
                             alt='Preview'
                             className='w-full h-full object-contain'
                           />
@@ -550,7 +687,7 @@ export default function AddBook({ onClose, onSuccess }) {
               isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
             }`}
           >
-            {isSubmitting ? 'Saving...' : 'Save Book'}
+            {isSubmitting ? 'Updating...' : 'Update Book'}
           </button>
         </div>
       </div>

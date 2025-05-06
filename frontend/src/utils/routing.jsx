@@ -31,7 +31,6 @@ import AuthorDescription from '../pages/user/AuthorDescription';
 import BooksManagementPage from '../pages/admin/BooksManagementPage';
 import AddBook from '../components/Admin/BooksManagement/AddBook';
 import StaffOrdersPanel from '../pages/staff/Orders';
-
 import AuthorsManagementPage from '../pages/admin/AuthorManagementPage';
 import AddAuthor from '../components/Admin/AuthorManagement/AddAuthor';
 import UpdateAuthor from '../components/Admin/AuthorManagement/UpdateAuthor';
@@ -121,9 +120,8 @@ const Routing = () => {
             <Route path='/edit-author' element={<UpdateAuthor />} />
           </Route>
 
-
           <Route path='StaffOrdersPanel' element={<StaffOrdersPanel />} />
-          
+
           {/* Static pages public */}
           <Route
             path='/about'
