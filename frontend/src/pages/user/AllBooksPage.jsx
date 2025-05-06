@@ -13,7 +13,7 @@ const AllBooksPage = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [selectedGenre, setSelectedGenre] = useState('');
   const navigate = useNavigate();
-  const pageSize = 12;
+  const pageSize = 4;
 
   // Fixed genres based on the enum
   const genres = [
