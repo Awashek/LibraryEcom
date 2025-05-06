@@ -41,10 +41,10 @@ const AddAuthorModal = ({ isOpen, onClose, onSave }) => {
     if (formData.birthDate) {
       // Convert birthDate to ISO string for backend
       try {
-        const isoDate = new Date(formData.birthDate).toISOString();
+        const dateOnly = formData.birthDate.split('T')[0]; // Extract YYYY-MM-DD
         authorData = {
           ...formData,
-          birthDate: isoDate,
+          birthDate: dateOnly,
         };
       } catch (err) {
         setError('Invalid date format');

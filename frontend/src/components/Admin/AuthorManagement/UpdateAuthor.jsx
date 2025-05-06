@@ -19,7 +19,7 @@ const UpdateAuthor = ({ isOpen, onClose, author, onSave, axios }) => {
         name: author.name || '',
         biography: author.biography || '',
         birthDate: author.birthDate
-          ? new Date(author.birthDate).toISOString().slice(0, 16)
+          ? new Date(author.birthDate).toISOString().slice(0, 10)
           : '',
       });
     }
@@ -41,9 +41,7 @@ const UpdateAuthor = ({ isOpen, onClose, author, onSave, axios }) => {
       const formattedData = {
         name: formData.name,
         biography: formData.biography,
-        birthDate: formData.birthDate
-          ? new Date(formData.birthDate).toISOString()
-          : null,
+        birthDate: formData.birthDate || null,
       };
 
       await axios.put(`/api/author/${author.id}`, formattedData);
