@@ -31,6 +31,7 @@ import AuthorDescription from '../pages/user/AuthorDescription';
 import BooksManagementPage from '../pages/admin/BooksManagementPage';
 import AddBook from '../components/Admin/BooksManagement/AddBook';
 import StaffOrdersPanel from '../pages/staff/Orders';
+
 import AuthorsManagementPage from '../pages/admin/AuthorManagementPage';
 import AddAuthor from '../components/Admin/AuthorManagement/AddAuthor';
 import UpdateAuthor from '../components/Admin/AuthorManagement/UpdateAuthor';
@@ -77,11 +78,12 @@ const Routing = () => {
           <Route path='/register' element={<Register />} />
           <Route path='genresandthem' element={<GenresAndTheam />} />
 
+
           {/* Protected Routes for Users (regular users) */}
           <Route element={<ProtectedRoute allowedRoles={['User']} />} />
           <Route path='/wishlist' element={<WishlistPage />} />
           <Route path='/cart' element={<CartPage />} />
-          <Route path='/book-details/:bookId' element={<BookDetails />} />
+          <Route path='/bookdetails' element={<BookDetails />} />
           <Route path='authordescription' element={<AuthorDescription />} />
           
 
@@ -120,8 +122,9 @@ const Routing = () => {
             <Route path='/edit-author' element={<UpdateAuthor />} />
           </Route>
 
-          <Route path='StaffOrdersPanel' element={<StaffOrdersPanel />} />
 
+          <Route path='StaffOrdersPanel' element={<StaffOrdersPanel />} />
+          
           {/* Static pages public */}
           <Route
             path='/about'

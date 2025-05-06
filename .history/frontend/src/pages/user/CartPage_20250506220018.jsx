@@ -4,7 +4,7 @@ import useAxios from '../../utils/axios/useAxios';
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const { data: cartData } = useAxios('Cart'); 
-  console.log(cartData)// Fetch all cart data from the API
+  console.log(car)// Fetch all cart data from the API
   
   useEffect(() => {
     if (cartData && cartData.result && cartData.result.length > 0) {
