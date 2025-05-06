@@ -3,8 +3,7 @@ import useAxios from '../../utils/axios/useAxios';
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
-  const { data: cartData } = useAxios('Cart'); 
-  console.log(cartData)// Fetch all cart data from the API
+  const { data: cartData } = useAxios('Cart'); // Fetch all cart data from the API
   
   useEffect(() => {
     if (cartData && cartData.result && cartData.result.length > 0) {
@@ -108,16 +107,7 @@ const CartPage = () => {
                             <div>
                               <h3 className="text-lg font-medium text-gray-900">{formattedItem.title}</h3>
                               <p className="text-lg font-medium text-gray-900 mt-2">
-                                {formattedItem.discount ? (
-                                  <>
-                                    ${(formattedItem.price * (1 - formattedItem.discount.percentage / 100)).toFixed(2)}
-                                    <span className="ml-2 text-sm text-gray-500 line-through">
-                                      ${formattedItem.price.toFixed(2)}
-                                    </span>
-                                  </>
-                                ) : (
-                                  `$${formattedItem.price.toFixed(2)}`
-                                )}
+                                ${formattedItem.price.toFixed(2)}
                               </p>
                             </div>
 
