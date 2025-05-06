@@ -17,9 +17,13 @@ import {
 import Reviews from '../../components/User/BooksReview/Reviews';
 import { useParams, Link } from 'react-router-dom';
 import useAxios from '../../utils/axios/useAxios';
+import useAxiosAuth from '../../utils/axios/useAxiosAuth';
+import { toast } from 'react-toastify';
 
 // Main Book Details Component
 const BookDetails = () => {
+  const axios = useAxiosAuth();
+
   const { bookId } = useParams(); // Get the bookId from the URL
   const [book, setBook] = useState(null);
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -41,6 +45,10 @@ const BookDetails = () => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
+  const addtocart = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
 
   // Toggle bookmark
   const toggleBookmark = () => {
@@ -59,6 +67,23 @@ const BookDetails = () => {
     );
   }
 
+  const handleAddToCart = () => {
+  if (!book) return;
+
+  axios.post('/api/Cart', { bookId: book.id }, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  .then(() => {
+    toast.success('Book added to cart!');
+  })
+  .catch((error) => {
+    console.error('Add to Cart Error:', error);
+    toast.error('Failed to add book to cart');
+  });
+};
+  
   // Calculate discounted price if available
   const discountedPrice =
     book.discount && book.discount.length > 0
@@ -204,7 +229,7 @@ const BookDetails = () => {
               <button className='bg-blue-600 hover:bg-blue-700 text-white py-3 px-8 rounded-xl flex items-center gap-2 font-medium transition-all duration-200 shadow-lg hover:shadow-blue-900/30 hover:-translate-y-0.5'>
                 Book Now <ArrowUpRight size={18} />
               </button>
-              <button className='bg-gray-800 hover:bg-gray-700 py-3 px-8 rounded-xl flex items-center gap-2 font-medium transition-all duration-200 shadow-lg hover:-translate-y-0.5'>
+              <button className='bg-gray-800 hover:bg-gray-700 py-3 px-8 rounded-xl flex items-center gap-2 font-medium transition-all duration-200 shadow-lg hover:-translate-y-0.5' onClick={handleAddToCart}>
                 <ShoppingCart size={18} /> Add to Cart
               </button>
             </div>

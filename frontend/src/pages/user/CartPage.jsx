@@ -1,72 +1,78 @@
 import React, { useEffect, useState } from 'react';
 import useAxios from '../../utils/axios/useAxios';
+import { toast } from 'react-toastify';
+import useAxiosAuth from '../../utils/axios/useAxiosAuth';
 
 const CartPage = () => {
+  const axios = useAxiosAuth();
   const [cartItems, setCartItems] = useState([]);
-  const { data: cartData } = useAxios('Cart'); 
-  console.log(cartData)// Fetch all cart data from the API
-  
+  const { data: cartData } = useAxios('Cart');
+
   useEffect(() => {
     if (cartData && cartData.result && cartData.result.length > 0) {
-      setCartItems(cartData.result); // Access the 'result' array from the response
+      setCartItems(cartData.result);
     } else {
-      setCartItems([]); // Empty cart if no data is found
+      setCartItems([]);
     }
   }, [cartData]);
 
-  // Format cart book data
   const formatCartBook = (item) => {
     const book = item.book;
     return {
       id: item.id || book.id,
       title: book.title,
       price: book.basePrice || 0,
-      discount: book.discount,
       coverImage: book.coverImage || 'https://via.placeholder.com/150x200?text=No+Cover',
       quantity: item.quantity || 1
     };
   };
 
-  // Update item quantity
   const updateQuantity = (id, newQuantity) => {
     if (newQuantity < 1) return;
-    
     setCartItems(cartItems.map(item =>
       item.id === id ? { ...item, quantity: newQuantity } : item
     ));
   };
 
-  // Remove item from cart
   const removeItem = (id) => {
     setCartItems(cartItems.filter(item => item.id !== id));
   };
 
-  // Calculate cart totals
   const calculateTotals = () => {
     const subtotal = cartItems.reduce((total, item) => {
       const book = item.book;
       const price = book.basePrice || 0;
-      const discountedPrice = book.discount 
-        ? price * (1 - book.discount.percentage / 100)
-        : price;
-      return total + (discountedPrice * (item.quantity || 1));
+      return total + (price * (item.quantity || 1));
     }, 0);
-    
+
     const totalItems = cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
-    const shipping = 4.99;
-    const tax = subtotal * 0.08; // 8% tax
-    const total = subtotal + shipping + tax;
-    
+    const total = subtotal;
+
     return {
       subtotal,
-      shipping,
-      tax,
       total,
       totalItems
     };
   };
 
   const totals = calculateTotals();
+
+  const handlePlaceOrder = () => {
+    axios.post('/api/order/place', {}, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then((response) => {
+      console.log("📦 Order Placed:", response.data);
+      toast.success("Order placed successfully!");
+      setCartItems([]);
+    })
+    .catch((error) => {
+      console.error("❌ Order Error:", error.response?.data || error.message);
+      toast.error("Failed to place order");
+    });
+  };
 
   return (
     <div className="bg-gray-50 min-h-screen py-8">
@@ -87,7 +93,6 @@ const CartPage = () => {
           </div>
         ) : (
           <div className="flex flex-col lg:flex-row gap-8">
-            {/* Cart Items */}
             <div className="lg:w-2/3">
               <div className="bg-white rounded-lg shadow-md overflow-hidden">
                 <ul className="divide-y divide-gray-200">
@@ -102,25 +107,14 @@ const CartPage = () => {
                             className="w-24 h-36 object-cover rounded-md"
                           />
                         </div>
-
                         <div className="flex-1">
                           <div className="flex justify-between">
                             <div>
                               <h3 className="text-lg font-medium text-gray-900">{formattedItem.title}</h3>
                               <p className="text-lg font-medium text-gray-900 mt-2">
-                                {formattedItem.discount ? (
-                                  <>
-                                    ${(formattedItem.price * (1 - formattedItem.discount.percentage / 100)).toFixed(2)}
-                                    <span className="ml-2 text-sm text-gray-500 line-through">
-                                      ${formattedItem.price.toFixed(2)}
-                                    </span>
-                                  </>
-                                ) : (
-                                  `$${formattedItem.price.toFixed(2)}`
-                                )}
+                                ${formattedItem.price.toFixed(2)}
                               </p>
                             </div>
-
                             <button
                               onClick={() => removeItem(formattedItem.id)}
                               className="text-gray-400 hover:text-red-500"
@@ -130,7 +124,6 @@ const CartPage = () => {
                               </svg>
                             </button>
                           </div>
-
                           <div className="mt-4 flex items-center">
                             <div className="flex items-center border border-gray-300 rounded-md">
                               <button
@@ -149,13 +142,10 @@ const CartPage = () => {
                                 +
                               </button>
                             </div>
-
                             <div className="ml-auto text-right">
                               <p className="text-sm text-gray-600">Subtotal</p>
                               <p className="text-lg font-medium text-gray-900">
-                                ${formattedItem.discount ? 
-                                  ((formattedItem.price * (1 - formattedItem.discount.percentage / 100)) * formattedItem.quantity).toFixed(2) : 
-                                  (formattedItem.price * formattedItem.quantity).toFixed(2)}
+                                ${(formattedItem.price * formattedItem.quantity).toFixed(2)}
                               </p>
                             </div>
                           </div>
@@ -165,7 +155,6 @@ const CartPage = () => {
                   })}
                 </ul>
               </div>
-
               <div className="mt-6 flex justify-between items-center">
                 <button className="text-blue-600 hover:text-blue-800 flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
@@ -173,7 +162,6 @@ const CartPage = () => {
                   </svg>
                   Continue Shopping
                 </button>
-
                 <button
                   onClick={() => setCartItems([])}
                   className="text-red-600 hover:text-red-800 flex items-center"
@@ -186,27 +174,14 @@ const CartPage = () => {
               </div>
             </div>
 
-            {/* Order Summary */}
             <div className="lg:w-1/3">
               <div className="bg-white rounded-lg shadow-md p-6 sticky top-20">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">Order Summary</h2>
-
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <p className="text-gray-600">Subtotal ({totals.totalItems} items)</p>
                     <p className="font-medium">${totals.subtotal.toFixed(2)}</p>
                   </div>
-
-                  <div className="flex justify-between">
-                    <p className="text-gray-600">Shipping</p>
-                    <p className="font-medium">${totals.shipping.toFixed(2)}</p>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <p className="text-gray-600">Tax (8%)</p>
-                    <p className="font-medium">${totals.tax.toFixed(2)}</p>
-                  </div>
-
                   <div className="border-t border-gray-200 pt-3 mt-3">
                     <div className="flex justify-between font-semibold text-lg">
                       <p>Total</p>
@@ -215,8 +190,10 @@ const CartPage = () => {
                   </div>
                 </div>
 
-                {/* Checkout button */}
-                <button className="mt-6 w-full bg-blue-600 text-white py-3 px-4 rounded-md font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                <button
+                  onClick={handlePlaceOrder}
+                  className="mt-6 w-full bg-blue-600 text-white py-3 px-4 rounded-md font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                >
                   Proceed to Checkout
                 </button>
               </div>
