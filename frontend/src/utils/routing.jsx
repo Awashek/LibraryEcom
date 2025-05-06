@@ -34,6 +34,7 @@ import StaffOrdersPanel from '../pages/staff/Orders';
 import AuthorsManagementPage from '../pages/admin/AuthorManagementPage';
 import AddAuthor from '../components/Admin/AuthorManagement/AddAuthor';
 import UpdateAuthor from '../components/Admin/AuthorManagement/UpdateAuthor';
+import DiscountPage from '../pages/admin/DiscountPage';
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -46,6 +47,9 @@ const Layout = ({ children }) => {
     '/announcement',
     '/add-announcement',
     '/UserManagement',
+    '/StaffOrdersPanel',
+    '/author-management',
+    '/discount',
   ];
   const isAuthPage = authPages.includes(location.pathname);
 
@@ -72,6 +76,7 @@ const Routing = () => {
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
           <Route path='genresandthem' element={<GenresAndTheam />} />
+
 
           {/* Protected Routes for Users (regular users) */}
           <Route element={<ProtectedRoute allowedRoles={['User']} />} />
@@ -106,6 +111,7 @@ const Routing = () => {
             <Route path='/announcement' element={<AnnouncementPage />} />
             <Route path='/add-announcement' element={<AddAnnouncement />} />
             <Route path='/UserManagement' element={<UserManagement />} />
+            <Route path='/discount' element={<DiscountPage />} />
             <Route
               path='/author-management'
               element={<AuthorsManagementPage />}
