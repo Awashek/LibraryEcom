@@ -50,7 +50,7 @@ export default function Login() {
               navigate('/dashboard');
               break;
             case 'Staff':
-              navigate('/products');
+              navigate('/StaffOrdersPanel');
               break;
             case 'User':
             default:

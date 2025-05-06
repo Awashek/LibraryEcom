@@ -18,7 +18,7 @@ import useAxiosAuth from '../../../utils/axios/useAxiosAuth';
 import useAxios from '../../../utils/axios/useAxios';
 import { toast } from 'react-toastify';
 
-export default function AddBook({ onClose, onSuccess }) {
+export default function EditBook({ bookId, onClose, onSuccess }) {
   const [formData, setFormData] = useState({
     title: '',
     authorIds: [],
@@ -34,16 +34,109 @@ export default function AddBook({ onClose, onSuccess }) {
     isAvailable: 'true',
   });
   const [coverImage, setCoverImage] = useState(null);
+  const [coverImagePreview, setCoverImagePreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAuthorDropdown, setShowAuthorDropdown] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const axios = useAxiosAuth();
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 12;
+
+  // Fetch book data
+  const { data: bookData, refetch } = useAxios(`book/${bookId}`);
 
   // Fetch authors using useAxios hook
   const { data: authors } = useAxios(
     `author?pageNumber=${currentPage}&pageSize=${pageSize}&search=`
   );
+
+  // Load book data when component mounts or bookId changes
+  useEffect(() => {
+    if (bookId) {
+      refetch();
+    }
+  }, [bookId, refetch]);
+
+  // Format mappings for dropdown values
+  const mapBookFormatToValue = (format) => {
+    const formatMap = {
+      Paperback: '1',
+      Hardcover: '2',
+      SignedEdition: '3',
+      LimitedEdition: '4',
+      FirstEdition: '5',
+      CollectorsEdition: '6',
+      AuthorsEdition: '7',
+      DeluxeEdition: '8',
+    };
+    return formatMap[format] || '';
+  };
+
+  const mapGenreToValue = (genre) => {
+    const genreMap = {
+      Fiction: '1',
+      'Non-Fiction': '2',
+      Mystery: '3',
+      Thriller: '4',
+      Romance: '5',
+      Fantasy: '6',
+      'Science Fiction': '7',
+      Biography: '8',
+      History: '9',
+      Education: '10',
+      Horror: '11',
+    };
+    return genreMap[genre] || '';
+  };
+
+  const mapLanguageToValue = (language) => {
+    const languageMap = {
+      English: '1',
+      Nepali: '2',
+      Hindi: '3',
+      Spanish: '4',
+      French: '5',
+      German: '6',
+      Chinese: '7',
+      Japanese: '8',
+      Korean: '9',
+      Arabic: '10',
+      Russian: '11',
+      Portuguese: '12',
+      Italian: '13',
+    };
+    return languageMap[language] || '';
+  };
+
+  // Update form data when book data is loaded
+  useEffect(() => {
+    if (bookData?.result) {
+      const book = bookData.result;
+      console.log('Loaded book data:', book);
+
+      setFormData({
+        title: book.title || '',
+        authorIds: book.authors?.map((author) => author.id) || [],
+        publisherName: book.publisherName || '',
+        description: book.description || '',
+        isbn: book.isbn || '',
+        publicationDate: book.publicationDate
+          ? book.publicationDate.split('T')[0]
+          : '',
+        pageCount: book.pageCount?.toString() || '',
+        bookFormat: mapBookFormatToValue(book.bookFormat) || '',
+        basePrice: book.basePrice?.toString() || '',
+        genre: mapGenreToValue(book.genre) || '',
+        language: mapLanguageToValue(book.language) || '',
+        isAvailable: book.isAvailable ? 'true' : 'false',
+      });
+
+      if (book.coverImage) {
+        setCoverImagePreview(`http://localhost:7226/images/${book.coverImage}`);
+      }
+      setIsLoading(false);
+    }
+  }, [bookData]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -79,6 +172,7 @@ export default function AddBook({ onClose, onSuccess }) {
     const file = e.target.files[0];
     if (file) {
       setCoverImage(file);
+      setCoverImagePreview(URL.createObjectURL(file));
     }
   };
 
@@ -111,35 +205,44 @@ export default function AddBook({ onClose, onSuccess }) {
 
     const formDataToSend = new FormData();
 
-    // Append all form fields
-    Object.entries(formData).forEach(([key, value]) => {
-      if (key === 'authorIds') {
-        value.forEach((id) => formDataToSend.append('AuthorIds', id));
-      } else if (value !== '') {
-        formDataToSend.append(key, value);
-      }
+    // Append all form fields - using the same case pattern as AddBook component
+    formDataToSend.append('title', formData.title);
+    formDataToSend.append('publisherName', formData.publisherName);
+    formDataToSend.append('description', formData.description);
+    formDataToSend.append('isbn', formData.isbn);
+    formDataToSend.append('publicationDate', formData.publicationDate);
+    formDataToSend.append('pageCount', formData.pageCount);
+    formDataToSend.append('bookFormat', formData.bookFormat);
+    formDataToSend.append('basePrice', formData.basePrice);
+    formDataToSend.append('genre', formData.genre);
+    formDataToSend.append('language', formData.language);
+    formDataToSend.append('isAvailable', formData.isAvailable);
+
+    // Append author IDs - using the same approach as AddBook
+    formData.authorIds.forEach((id) => {
+      formDataToSend.append('authorIds', id);
     });
 
     // Append cover image if exists
     if (coverImage) {
-      formDataToSend.append('CoverImage', coverImage);
+      formDataToSend.append('coverImage', coverImage);
     }
 
     axios
-      .post('/api/book', formDataToSend, {
+      .put(`/api/book/${bookId}`, formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       })
       .then((response) => {
-        toast.success('Book added successfully!');
+        toast.success('Book updated successfully!');
         if (onSuccess) {
           onSuccess();
         }
       })
       .catch((error) => {
-        console.error('Error adding book:', error);
-        toast.error(error.response?.data?.message || 'Failed to add book');
+        console.error('Error updating book:', error);
+        toast.error(error.response?.data?.message || 'Failed to update book');
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -151,15 +254,25 @@ export default function AddBook({ onClose, onSuccess }) {
     e.stopPropagation();
   };
 
+  if (isLoading) {
+    return (
+      <div className='fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center'>
+        <div className='bg-white rounded-lg p-6'>
+          <p>Loading book data...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className='fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center overflow-hidden'>
+    <div className='fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center overflow-hidden'>
       <div
         className='bg-white rounded-lg shadow-xl w-full max-w-6xl h-screen max-h-[95vh] flex flex-col'
         onClick={handleModalClick}
       >
         <div className='sticky top-0 z-10 bg-white p-4 border-b border-gray-200 flex justify-between items-center'>
           <div className='flex items-center'>
-            <h1 className='text-xl font-bold text-gray-800'>Add New Book</h1>
+            <h1 className='text-xl font-bold text-gray-800'>Edit Book</h1>
           </div>
           <button
             onClick={onClose}
@@ -239,9 +352,9 @@ export default function AddBook({ onClose, onSuccess }) {
                         </span>
                       </div>
 
-                      {showAuthorDropdown && (
+                      {showAuthorDropdown && authors?.result && (
                         <div className='absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto'>
-                          {authors?.result?.map((author) => (
+                          {authors.result.map((author) => (
                             <div
                               key={author.id}
                               className='p-2 hover:bg-gray-100'
@@ -495,10 +608,10 @@ export default function AddBook({ onClose, onSuccess }) {
                   </h2>
                   <div>
                     <label className='flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-indigo-400 transition-colors bg-gray-50'>
-                      {coverImage ? (
+                      {coverImagePreview ? (
                         <div className='w-full h-full overflow-hidden rounded-lg'>
                           <img
-                            src={URL.createObjectURL(coverImage)}
+                            src={coverImagePreview}
                             alt='Preview'
                             className='w-full h-full object-contain'
                           />
@@ -549,7 +662,7 @@ export default function AddBook({ onClose, onSuccess }) {
               isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
             }`}
           >
-            {isSubmitting ? 'Saving...' : 'Save Book'}
+            {isSubmitting ? 'Updating...' : 'Update Book'}
           </button>
         </div>
       </div>
