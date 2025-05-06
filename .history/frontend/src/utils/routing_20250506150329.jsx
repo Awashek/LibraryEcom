@@ -85,7 +85,6 @@ const Routing = () => {
           <Route path='/cart' element={<CartPage />} />
           <Route path='/bookdetails' element={<BookDetails />} />
           <Route path='authordescription' element={<AuthorDescription />} />
-          
 
           {/* Profile routes */}
           <Route path='/profile' element={<ProfileLayout />}>

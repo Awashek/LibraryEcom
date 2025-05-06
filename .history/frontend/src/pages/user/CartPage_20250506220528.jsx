@@ -3,66 +3,100 @@ import useAxios from '../../utils/axios/useAxios';
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
-  const { data: cartData } = useAxios('Cart'); 
-  console.log(cartData)// Fetch all cart data from the API
-  
+  const [orderHistory, setOrderHistory] = useState({ count: 0 });
+  const { data: cartData } = useAxios('Cart');
+  const { data: orderData } = useAxios('OrderHistory');
+
   useEffect(() => {
     if (cartData && cartData.result && cartData.result.length > 0) {
-      setCartItems(cartData.result); // Access the 'result' array from the response
+      setCartItems(cartData.result);
     } else {
-      setCartItems([]); // Empty cart if no data is found
+      setCartItems([]);
     }
   }, [cartData]);
 
-  // Format cart book data
+  useEffect(() => {
+    if (orderData && orderData.result) {
+      setOrderHistory(orderData.result);
+    }
+  }, [orderData]);
+
   const formatCartBook = (item) => {
     const book = item.book;
     return {
       id: item.id || book.id,
       title: book.title,
       price: book.basePrice || 0,
-      discount: book.discount,
       coverImage: book.coverImage || 'https://via.placeholder.com/150x200?text=No+Cover',
       quantity: item.quantity || 1
     };
   };
 
-  // Update item quantity
   const updateQuantity = (id, newQuantity) => {
     if (newQuantity < 1) return;
-    
     setCartItems(cartItems.map(item =>
       item.id === id ? { ...item, quantity: newQuantity } : item
     ));
   };
 
-  // Remove item from cart
   const removeItem = (id) => {
     setCartItems(cartItems.filter(item => item.id !== id));
   };
 
-  // Calculate cart totals
-  const calculateTotals = () => {
-    const subtotal = cartItems.reduce((total, item) => {
-      const book = item.book;
-      const price = book.basePrice || 0;
-      const discountedPrice = book.discount 
-        ? price * (1 - book.discount.percentage / 100)
-        : price;
-      return total + (discountedPrice * (item.quantity || 1));
-    }, 0);
-    
+  const calculateDiscounts = () => {
+    // Count total items in cart
     const totalItems = cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
-    const shipping = 4.99;
-    const tax = subtotal * 0.08; // 8% tax
-    const total = subtotal + shipping + tax;
+    
+    // Initialize discounts
+    let volumeDiscount = 0;
+    let loyaltyDiscount = 0;
+    let discountMessages = [];
+    
+    // Apply 5% discount for 5+ books in cart
+    if (totalItems >= 5) {
+      volumeDiscount = 0.05;
+      discountMessages.push(`5% discount applied for ordering 5+ books`);
+    }
+    
+    // Apply 10% stackable discount for members with 10+ completed orders
+    if (orderHistory.count >= 10) {
+      loyaltyDiscount = 0.10;
+      discountMessages.push(`10% loyalty discount applied for ${orderHistory.count} completed orders`);
+    }
     
     return {
+      volumeDiscount,
+      loyaltyDiscount,
+      totalDiscountRate: volumeDiscount + loyaltyDiscount,
+      discountMessages
+    };
+  };
+
+  const calculateTotals = () => {
+    const subtotal = cartItems.reduce((total, item) => {
+      const price = item.book.basePrice || 0;
+      return total + (price * (item.quantity || 1));
+    }, 0);
+
+    const totalItems = cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
+    
+    // Calculate discounts
+    const discounts = calculateDiscounts();
+    const discountAmount = subtotal * discounts.totalDiscountRate;
+    
+    // Calculate final amount (without shipping and tax)
+    const total = subtotal - discountAmount;
+    
+    // Calculate items needed for discount
+    const itemsNeededForDiscount = totalItems >= 5 ? 0 : 5 - totalItems;
+
+    return {
       subtotal,
-      shipping,
-      tax,
+      discounts,
+      discountAmount,
       total,
-      totalItems
+      totalItems,
+      itemsNeededForDiscount
     };
   };
 
@@ -87,8 +121,19 @@ const CartPage = () => {
           </div>
         ) : (
           <div className="flex flex-col lg:flex-row gap-8">
-            {/* Cart Items */}
             <div className="lg:w-2/3">
+              <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+                <div className="flex items-center text-blue-600">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-medium">You have completed {orderHistory.count} orders</span>
+                </div>
+                {orderHistory.count < 10 && (
+                  <p className="text-sm text-gray-600 mt-1 pl-7">Complete {10 - orderHistory.count} more orders to receive 10% loyalty discount</p>
+                )}
+              </div>
+
               <div className="bg-white rounded-lg shadow-md overflow-hidden">
                 <ul className="divide-y divide-gray-200">
                   {cartItems.map((item) => {
@@ -108,16 +153,7 @@ const CartPage = () => {
                             <div>
                               <h3 className="text-lg font-medium text-gray-900">{formattedItem.title}</h3>
                               <p className="text-lg font-medium text-gray-900 mt-2">
-                                {formattedItem.discount ? (
-                                  <>
-                                    ${(formattedItem.price * (1 - formattedItem.discount.percentage / 100)).toFixed(2)}
-                                    <span className="ml-2 text-sm text-gray-500 line-through">
-                                      ${formattedItem.price.toFixed(2)}
-                                    </span>
-                                  </>
-                                ) : (
-                                  `$${formattedItem.price.toFixed(2)}`
-                                )}
+                                ${formattedItem.price.toFixed(2)}
                               </p>
                             </div>
 
@@ -153,9 +189,7 @@ const CartPage = () => {
                             <div className="ml-auto text-right">
                               <p className="text-sm text-gray-600">Subtotal</p>
                               <p className="text-lg font-medium text-gray-900">
-                                ${formattedItem.discount ? 
-                                  ((formattedItem.price * (1 - formattedItem.discount.percentage / 100)) * formattedItem.quantity).toFixed(2) : 
-                                  (formattedItem.price * formattedItem.quantity).toFixed(2)}
+                                ${(formattedItem.price * formattedItem.quantity).toFixed(2)}
                               </p>
                             </div>
                           </div>
@@ -190,34 +224,45 @@ const CartPage = () => {
             <div className="lg:w-1/3">
               <div className="bg-white rounded-lg shadow-md p-6 sticky top-20">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">Order Summary</h2>
-
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <div className="flex justify-between">
-                    <p className="text-gray-600">Subtotal ({totals.totalItems} items)</p>
-                    <p className="font-medium">${totals.subtotal.toFixed(2)}</p>
+                    <span className="text-gray-600">Items ({totals.totalItems})</span>
+                    <span className="text-gray-900 font-medium">${totals.subtotal.toFixed(2)}</span>
                   </div>
 
-                  <div className="flex justify-between">
-                    <p className="text-gray-600">Shipping</p>
-                    <p className="font-medium">${totals.shipping.toFixed(2)}</p>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <p className="text-gray-600">Tax (8%)</p>
-                    <p className="font-medium">${totals.tax.toFixed(2)}</p>
-                  </div>
-
-                  <div className="border-t border-gray-200 pt-3 mt-3">
-                    <div className="flex justify-between font-semibold text-lg">
-                      <p>Total</p>
-                      <p>${totals.total.toFixed(2)}</p>
+                  {totals.itemsNeededForDiscount > 0 && (
+                    <div className="flex justify-between bg-blue-50 p-2 rounded-md text-blue-700">
+                      <span className="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
+                        </svg>
+                        Add {totals.itemsNeededForDiscount} more item{totals.itemsNeededForDiscount > 1 ? 's' : ''}
+                      </span>
+                      <span>Get 5% off!</span>
                     </div>
+                  )}
+
+                  {totals.discounts.totalDiscountRate > 0 && (
+                    <>
+                      {totals.discounts.discountMessages.map((message, index) => (
+                        <div key={index} className="flex justify-between text-green-600">
+                          <span>{message}</span>
+                          <span>-${(index === 0 ? 
+                            totals.subtotal * totals.discounts.volumeDiscount : 
+                            totals.subtotal * totals.discounts.loyaltyDiscount).toFixed(2)}</span>
+                        </div>
+                      ))}
+                    </>
+                  )}
+
+                  <hr className="my-2" />
+                  <div className="flex justify-between text-lg font-semibold">
+                    <span>Total</span>
+                    <span>${totals.total.toFixed(2)}</span>
                   </div>
                 </div>
-
-                {/* Checkout button */}
-                <button className="mt-6 w-full bg-blue-600 text-white py-3 px-4 rounded-md font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
-                  Proceed to Checkout
+                <button className="mt-6 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors">
+                  Checkout
                 </button>
               </div>
             </div>
