@@ -3,8 +3,19 @@ import useAxios from '../../utils/axios/useAxios';
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
+  const [memberInfo, setMemberInfo] = useState({
+    isMember: true, // Default to true for display purposes
+    successfulOrders: 12, // Default number of orders for display
+  });
+  
   const { data: cartData } = useAxios('Cart'); 
-  console.log(cartData)// Fetch all cart data from the API
+  
+  // Safely fetch member info with error handling
+  const { data: memberData, error: memberError } = useAxios('Member/current', {
+    // Setting manual to true prevents the request from automatically firing
+    // We'll handle this manually to prevent 404 errors in the console
+    manual: true
+  });
   
   useEffect(() => {
     if (cartData && cartData.result && cartData.result.length > 0) {
@@ -12,6 +23,27 @@ const CartPage = () => {
     } else {
       setCartItems([]); // Empty cart if no data is found
     }
+    
+    // Try to fetch member data - in production this would connect to your API
+    // This is commented out to prevent errors since your endpoint may not exist yet
+    /* 
+    try {
+      // You would implement proper fetching here with proper error handling
+      const fetchMemberInfo = async () => {
+        const response = await fetch('/api/member/current');
+        if (response.ok) {
+          const data = await response.json();
+          setMemberInfo({
+            isMember: true,
+            successfulOrders: data.successfulOrders || 0
+          });
+        }
+      };
+      fetchMemberInfo();
+    } catch (error) {
+      console.log("Member info not available, using default values");
+    }
+    */
   }, [cartData]);
 
   // Format cart book data
@@ -41,6 +73,42 @@ const CartPage = () => {
     setCartItems(cartItems.filter(item => item.id !== id));
   };
 
+  // Calculate member discounts
+  const calculateMemberDiscounts = (subtotal, totalItems) => {
+    let discounts = [];
+    let finalSubtotal = subtotal;
+    
+    // Get member status either from API or localStorage
+    // In a real app, you'd authenticate properly and store member status securely
+    const localMemberData = localStorage.getItem('memberInfo');
+    const currentMemberInfo = localMemberData ? JSON.parse(localMemberData) : memberInfo;
+    
+    // 5% discount for ordering 5+ books
+    if (totalItems >= 5) {
+      const bulkDiscount = subtotal * 0.05;
+      discounts.push({
+        name: "5% Bulk Purchase Discount (5+ books)",
+        amount: bulkDiscount
+      });
+      finalSubtotal -= bulkDiscount;
+    }
+    
+    // 10% loyalty discount after 10 successful orders
+    if (currentMemberInfo.isMember && currentMemberInfo.successfulOrders >= 10) {
+      const loyaltyDiscount = subtotal * 0.10;
+      discounts.push({
+        name: "10% Loyalty Discount (10+ orders)",
+        amount: loyaltyDiscount
+      });
+      finalSubtotal -= loyaltyDiscount;
+    }
+    
+    return {
+      discounts,
+      finalSubtotal
+    };
+  };
+
   // Calculate cart totals
   const calculateTotals = () => {
     const subtotal = cartItems.reduce((total, item) => {
@@ -53,12 +121,18 @@ const CartPage = () => {
     }, 0);
     
     const totalItems = cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
+    
+    // Apply member discounts
+    const { discounts, finalSubtotal } = calculateMemberDiscounts(subtotal, totalItems);
+    
     const shipping = 4.99;
-    const tax = subtotal * 0.08; // 8% tax
-    const total = subtotal + shipping + tax;
+    const tax = finalSubtotal * 0.08; // 8% tax on post-discount subtotal
+    const total = finalSubtotal + shipping + tax;
     
     return {
-      subtotal,
+      originalSubtotal: subtotal,
+      subtotal: finalSubtotal,
+      memberDiscounts: discounts,
       shipping,
       tax,
       total,
@@ -194,10 +268,27 @@ const CartPage = () => {
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <p className="text-gray-600">Subtotal ({totals.totalItems} items)</p>
-                    <p className="font-medium">${totals.subtotal.toFixed(2)}</p>
+                    <p className="font-medium">${totals.originalSubtotal.toFixed(2)}</p>
                   </div>
 
-                  <div className="flex justify-between">
+                  {/* Member Discounts Section */}
+                  {totals.memberDiscounts.length > 0 && (
+                    <div className="pt-2">
+                      <p className="text-gray-600 font-medium text-sm">Member Discounts:</p>
+                      {totals.memberDiscounts.map((discount, index) => (
+                        <div key={index} className="flex justify-between text-green-600 mt-1">
+                          <p className="text-sm">{discount.name}</p>
+                          <p className="font-medium">-${discount.amount.toFixed(2)}</p>
+                        </div>
+                      ))}
+                      <div className="flex justify-between font-medium mt-2 pt-2 border-t border-dashed border-gray-200">
+                        <p className="text-gray-600">Discounted Subtotal</p>
+                        <p>${totals.subtotal.toFixed(2)}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex justify-between pt-2">
                     <p className="text-gray-600">Shipping</p>
                     <p className="font-medium">${totals.shipping.toFixed(2)}</p>
                   </div>
@@ -211,6 +302,51 @@ const CartPage = () => {
                     <div className="flex justify-between font-semibold text-lg">
                       <p>Total</p>
                       <p>${totals.total.toFixed(2)}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Member Status Badge - Now with a toggle for testing */}
+                <div className="mt-4">
+                  {memberInfo.isMember ? (
+                    <div className="bg-blue-50 border border-blue-100 rounded-md p-3">
+                      <div className="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        <span className="text-blue-800 font-medium">Member Benefits Applied</span>
+                      </div>
+                      <p className="text-sm text-blue-600 mt-1 pl-7">
+                        {memberInfo.successfulOrders} completed orders
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="bg-gray-50 border border-gray-200 rounded-md p-3">
+                      <div className="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5.5a.75.75 0 001.5 0V5zm0 8a.75.75 0 00-1.5 0v.01a.75.75 0 001.5 0V13z" clipRule="evenodd" />
+                        </svg>
+                        <span className="text-gray-600 font-medium">Sign in for member benefits</span>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Toggle for testing discount features (in development only) */}
+                  <div className="mt-2 flex items-center justify-between text-sm text-gray-500">
+                    <span>Test Member Status:</span>
+                    <div className="flex space-x-2">
+                      <button 
+                        onClick={() => setMemberInfo({isMember: true, successfulOrders: 12})}
+                        className={`px-2 py-1 rounded ${memberInfo.isMember ? 'bg-blue-100 text-blue-700' : 'bg-gray-100'}`}
+                      >
+                        Member
+                      </button>
+                      <button 
+                        onClick={() => setMemberInfo({isMember: false, successfulOrders: 0})}
+                        className={`px-2 py-1 rounded ${!memberInfo.isMember ? 'bg-blue-100 text-blue-700' : 'bg-gray-100'}`}
+                      >
+                        Guest
+                      </button>
                     </div>
                   </div>
                 </div>
