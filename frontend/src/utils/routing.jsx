@@ -34,7 +34,7 @@ import StaffOrdersPanel from '../pages/staff/Orders';
 import AuthorsManagementPage from '../pages/admin/AuthorManagementPage';
 import AddAuthor from '../components/Admin/AuthorManagement/AddAuthor';
 import UpdateAuthor from '../components/Admin/AuthorManagement/UpdateAuthor';
-import DiscountPage from '../pages/admin/DiscountPage';
+import DiscountPage from '../pages/admin/DiscountModal';
 
 const Layout = ({ children }) => {
   const location = useLocation();

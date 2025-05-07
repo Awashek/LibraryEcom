@@ -30,7 +30,7 @@ body {
   }
 
   .btn-primary {
-    @apply bg-indigo-600 text-white hover:bg-indigo-700;
+    @apply bg-gray-900 text-white hover:bg-indigo-700;
   }
 
   .btn-secondary {

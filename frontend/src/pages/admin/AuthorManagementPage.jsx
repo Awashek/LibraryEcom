@@ -231,7 +231,7 @@ export default function AuthorsManagementPage() {
 
               <button
                 onClick={() => setIsAddModalOpen(true)}
-                className='flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors whitespace-nowrap'
+                className='flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-indigo-700 transition-colors whitespace-nowrap'
               >
                 <Plus size={16} />
                 <span>Add Author</span>
