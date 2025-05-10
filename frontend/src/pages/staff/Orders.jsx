@@ -43,6 +43,12 @@ export default function StaffOrdersPanel() {
     }
   }, [orderData]);
 
+  const handleLogout = () => {
+    signOut(); // This will clear the auth state and cookies
+    toast.success('Logged out successfully');
+    navigate('/homepage'); // Redirect to login page after logout
+  };
+
   const handleVerify = () => {
     if (!selectedOrder || enteredClaimCode !== selectedOrder.claimCode) return;
 
@@ -87,8 +93,8 @@ export default function StaffOrdersPanel() {
       <aside className="w-64 bg-[#0E1323] text-white p-6">
         <h2 className="text-2xl font-bold mb-10">BOOKISH</h2>
         <nav className="space-y-4">
-          <button className="text-left w-full text-white bg-gray-700 px-3 py-2 rounded">Active Orders</button>
-          <button className="text-left w-full text-gray-300 hover:text-white">Logout</button>
+          <button className="text-left w-full hover:text-white bg-gray-700 px-3 py-2 rounded">Active Orders</button>
+          <button className="text-left w-full text-white bg-gray-700 px-3 py-2 rounded hover:" onClick={handleLogout}>Logout</button>
         </nav>
       </aside>
 

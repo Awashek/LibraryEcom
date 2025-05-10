@@ -3,6 +3,8 @@ import { ArrowRight } from 'lucide-react';
 import PopularGenres from '../../components/User/Books/PopularGenres';
 import ReadesOnSale from '../../components/User/Books/ReadesOnSale';
 import { useNavigate } from 'react-router-dom';
+import useAxios from '../../utils/axios/useAxios';
+
 const HomePage = () => {
 
   const navigate = useNavigate();
@@ -68,6 +70,11 @@ const HomePage = () => {
     'Poetry',
     'Cookbooks',
   ];
+
+  const { data: booksData, refetch } = useAxios(
+    `book?pageNumber=1&pageSize=12&search=`,
+  )
+
 
   // For placeholder images
   useEffect(() => {

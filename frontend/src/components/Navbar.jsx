@@ -4,6 +4,10 @@ import useSignOut from "react-auth-kit/hooks/useSignOut";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useNotificationHub from "./NotificationHub/useNotificationHub";
+import { Heart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
+import { Bell } from "lucide-react";
+import useAxios from "../utils/axios/useAxios";
 
 const Navbar = () => {
   const [showAccountDropdown, setShowAccountDropdown] = useState(false);
@@ -13,6 +17,8 @@ const Navbar = () => {
   const { notifications } = useNotificationHub();
   const signOut = useSignOut();
   const navigate = useNavigate();
+  const { data: MyOrderData } = useAxios(`order/my-orders`);
+  console.log(MyOrderData, "MyOrderData");
 
   const location = useLocation();
   const isHomePage = location.pathname === "/";
@@ -38,7 +44,7 @@ const Navbar = () => {
   const handleLogout = () => {
     signOut();
     toast.success("Logged out successfully");
-    navigate("/login");
+    navigate("/homepage");
     closeDropdowns();
   };
 
@@ -122,13 +128,8 @@ const Navbar = () => {
               </svg>
             </button>
 
-            {/* Cart Icon */}
             <Link to="/cart" className="text-gray-600 hover:text-gray-900 focus:outline-none">
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <circle cx="9" cy="21" r="1" />
-                <circle cx="20" cy="21" r="1" />
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61l1.38-7.39H6" />
-              </svg>
+           < ShoppingCart/>
             </Link>
 
             {/* Notification Icon */}
@@ -137,16 +138,9 @@ const Navbar = () => {
                 className="text-gray-600 hover:text-gray-900 focus:outline-none relative"
                 onClick={() => setShowNotificationDropdown((prev) => !prev)}
               >
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V4a2 2 0 10-4 0v1.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                  />
-                </svg>
+                <Bell/>
                 {notifications.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1">
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full ">
                     {notifications.length}
                   </span>
                 )}
@@ -175,9 +169,7 @@ const Navbar = () => {
 
             {/* Wishlist Icon */}
             <Link to="/wishlist" className="text-gray-600 hover:text-gray-900">
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-              </svg>
+              <Heart/>
             </Link>
 
             {/* Account Icon */}
@@ -198,9 +190,7 @@ const Navbar = () => {
                     <Link to="/login" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Login</Link>
                     <Link to="/register" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Register</Link>
                     <div className="border-t border-gray-100"></div>
-                    <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Profile</Link>
-                    <Link to="/orders" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Orders</Link>
-                    <Link to="/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</Link>
+                    <Link to="/myorders" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Orders</Link>
                     <div className="border-t border-gray-100"></div>
                     <button
                       onClick={handleLogout}

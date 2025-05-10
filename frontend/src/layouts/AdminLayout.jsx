@@ -21,7 +21,7 @@ export default function AdminLayout() {
   const handleLogout = () => {
     signOut(); // This will clear the auth state and cookies
     toast.success('Logged out successfully');
-    navigate('/login'); // Redirect to login page after logout
+    navigate('/homepage'); // Redirect to login page after logout
   };
 
   return (

@@ -35,6 +35,7 @@ import AuthorsManagementPage from '../pages/admin/AuthorManagementPage';
 import AddAuthor from '../components/Admin/AuthorManagement/AddAuthor';
 import UpdateAuthor from '../components/Admin/AuthorManagement/UpdateAuthor';
 import DiscountPage from '../pages/admin/DiscountModal';
+import MyOrders from '../pages/user/MyOrders';
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -71,6 +72,7 @@ const Routing = () => {
         <Routes>
           {/* Public Routes */}
           <Route path='/' element={<HomePage />} />
+          <Route path='/homepage' element={<HomePage />} />
           <Route path='/allbooks' element={<AllBooksPage />} />
           <Route path='/test-connection' element={<TestConnection />} />
           <Route path='/login' element={<Login />} />
@@ -83,7 +85,8 @@ const Routing = () => {
           <Route path='/cart' element={<CartPage />} />
           <Route path='/book-details/:bookId' element={<BookDetails />} />
           <Route path='authordescription' element={<AuthorDescription />} />
-          
+          <Route path='/myorders' element={<MyOrders />} />
+
 
           {/* Profile routes */}
           <Route path='/profile' element={<ProfileLayout />}>
