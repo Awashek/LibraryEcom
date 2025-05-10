@@ -1,72 +1,66 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Bookmark } from 'lucide-react';
+import { toast } from 'react-toastify';
+import useAxios from '../../utils/axios/useAxios';
+import useAxiosAuth from '../../utils/axios/useAxiosAuth';
 
-export default function WishlisPage() {
-    const [books, setBooks] = useState([
-        {
-            id: 1,
-            title: "The Time Has Come",
-            author: "Will Leitch",
-            institution: "Lindbergh's Pharmacy is an Athens, Georgia, institution",
-            price: 27.89,
-            coverImage: "../images/placeholder-book.jpg",
-            inWishlist: true
-        },
-        {
-            id: 2,
-            title: "The Time Has Come",
-            author: "Will Leitch",
-            institution: "Lindbergh's Pharmacy is an Athens, Georgia, institution",
-            price: 27.89,
-            coverImage: "../images/placeholder-book.jpg",
-            inWishlist: true
-        },
-        {
-            id: 3,
-            title: "The Time Has Come",
-            author: "Will Leitch",
-            institution: "Lindbergh's Pharmacy is an Athens, Georgia, institution",
-            price: 27.89,
-            coverImage: "../images/placeholder-book.jpg",
-            inWishlist: true
-        },
-        {
-            id: 4,
-            title: "The Time Has Come",
-            author: "Will Leitch",
-            institution: "Lindbergh's Pharmacy is an Athens, Georgia, institution",
-            price: 27.89,
-            coverImage: "../images/placeholder-book.jpg",
-            inWishlist: true
-        },
-        {
-            id: 5,
-            title: "The Time Has Come",
-            author: "Will Leitch",
-            institution: "Lindbergh's Pharmacy is an Athens, Georgia, institution",
-            price: 27.89,
-            coverImage: "../images/placeholder-book.jpg",
-            inWishlist: true
-        },
-        {
-            id: 6,
-            title: "The Time Has Come",
-            author: "Will Leitch",
-            institution: "Lindbergh's Pharmacy is an Athens, Georgia, institution",
-            price: 27.89,
-            coverImage: "../images/placeholder-book.jpg",
-            inWishlist: true
+export default function WishlistPage() {
+    const axios = useAxiosAuth();
+    const { data: wishlistData } = useAxios(`whitelist?pageNumber=1&pageSize=12&search=`);
+    const [books, setBooks] = useState([]);
+
+    useEffect(() => {
+        if (wishlistData && wishlistData.result) {
+            const formattedBooks = wishlistData.result.map((item) => {
+                const book = item.book;
+                return {
+                    wishlistId: item.id, // this is important for delete call
+                    id: book.id,
+                    title: book.title,
+                    author: book.authors?.[0]?.name || "Unknown Author",
+                    institution: book.publisherName || "Unknown Publisher",
+                    price: book.basePrice || 0,
+                    coverImage: book.coverImage,
+                    inWishlist: true
+                };
+            });
+            setBooks(formattedBooks);
         }
-    ]);
+    }, [wishlistData]);
 
-    const addToCart = (id) => {
-        console.log(`Added book ${id} to cart`);
+    const addToCart = (bookId) => {
+        axios
+            .post(
+                "/api/Cart",
+                { bookId },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            )
+            .then(() => toast.success("Book added to cart!"))
+            .catch((error) => {
+                console.error("Add to Cart Error:", error);
+                toast.error("Failed to add book to cart");
+            });
     };
 
-    const toggleWishlist = (id) => {
-        setBooks(books.map(book =>
-            book.id === id ? { ...book, inWishlist: !book.inWishlist } : book
-        ));
+    const toggleWishlist = (bookId, wishlistId) => {
+        if (!wishlistId) return;
+
+        axios
+            .delete(`/api/whitelist/${wishlistId}`)
+            .then(() => {
+                toast.success("Removed from wishlist");
+                setBooks(prev =>
+                    prev.filter(book => book.id !== bookId)
+                );
+            })
+            .catch((error) => {
+                console.error("Remove Error:", error.response?.data || error.message);
+                toast.error("Failed to remove from wishlist");
+            });
     };
 
     return (
@@ -78,7 +72,7 @@ export default function WishlisPage() {
                     <div key={book.id} className="border rounded-md p-4 bg-white relative">
                         <button
                             className="absolute top-4 right-4 z-10"
-                            onClick={() => toggleWishlist(book.id)}
+                            onClick={() => toggleWishlist(book.id, book.wishlistId)}
                         >
                             <Bookmark
                                 fill={book.inWishlist ? "black" : "none"}
@@ -89,17 +83,14 @@ export default function WishlisPage() {
 
                         <div className="mb-3">
                             <img
-                                src={book.coverImage}
+                                src={`http://localhost:7226/images/${book.coverImage}`}
                                 alt={book.title}
                                 className="w-full h-64 object-cover rounded"
                             />
                         </div>
 
                         <h3 className="font-bold text-lg mb-1">{book.title}</h3>
-
-                        <p className="text-gray-600 text-sm mb-4">
-                            {book.institution}
-                        </p>
+                        <p className="text-gray-600 text-sm mb-4">{book.institution}</p>
 
                         <div className="flex justify-between items-center mt-2">
                             <span className="font-medium">$ {book.price}</span>
@@ -116,4 +107,3 @@ export default function WishlisPage() {
         </div>
     );
 }
-

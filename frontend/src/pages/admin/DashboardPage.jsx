@@ -16,133 +16,6 @@ import {
 } from 'lucide-react';
 import AdminLayout from '../../layouts/AdminLayout';
 
-// Dummy data for the dashboard
-const recentOrders = [
-  {
-    id: '1234',
-    member: 'John Smith',
-    book: 'The Great Gatsby',
-    status: 'Ready for pickup',
-    date: '2025-05-02',
-  },
-  {
-    id: '1235',
-    member: 'Emma Wilson',
-    book: 'To Kill a Mockingbird',
-    status: 'Processing',
-    date: '2025-05-02',
-  },
-  {
-    id: '1236',
-    member: 'Michael Brown',
-    book: '1984',
-    status: 'Ready for pickup',
-    date: '2025-05-01',
-  },
-  {
-    id: '1237',
-    member: 'Sophia Davis',
-    book: 'Pride and Prejudice',
-    status: 'Picked up',
-    date: '2025-05-01',
-  },
-  {
-    id: '1238',
-    member: 'James Johnson',
-    book: 'The Hobbit',
-    status: 'Processing',
-    date: '2025-04-30',
-  },
-];
-
-const popularBooks = [
-  { title: 'Dune', author: 'Frank Herbert', orders: 28, available: 5 },
-  {
-    title: 'The Lord of the Rings',
-    author: 'J.R.R. Tolkien',
-    orders: 24,
-    available: 3,
-  },
-  {
-    title: 'Harry Potter Series',
-    author: 'J.K. Rowling',
-    orders: 22,
-    available: 8,
-  },
-  {
-    title: 'A Song of Ice and Fire',
-    author: 'George R.R. Martin',
-    orders: 19,
-    available: 2,
-  },
-];
-
-// Dummy data for book reviews
-const bookReviews = [
-  {
-    id: 1,
-    bookName: 'The Midnight Library',
-    userName: 'Alex Johnson',
-    review:
-      'An absolutely captivating read that makes you think about the choices we make in life.',
-    rating: 5,
-    date: '2025-05-01',
-  },
-  {
-    id: 2,
-    bookName: 'Project Hail Mary',
-    userName: 'Sarah Williams',
-    review:
-      "Incredible sci-fi that balances technical details with heart. Couldn't put it down!",
-    rating: 5,
-    date: '2025-04-29',
-  },
-  {
-    id: 3,
-    bookName: 'Klara and the Sun',
-    userName: 'Marcus Lee',
-    review:
-      'A poignant exploration of artificial intelligence and what it means to be human.',
-    rating: 4,
-    date: '2025-04-28',
-  },
-  {
-    id: 4,
-    bookName: 'The Four Winds',
-    userName: 'Elena Rodriguez',
-    review:
-      "Heartbreaking historical fiction that resonates with today's challenges.",
-    rating: 4,
-    date: '2025-04-27',
-  },
-];
-
-const memberStats = {
-  total: 1243,
-  active: 876,
-  new: 36,
-};
-
-const bookStats = {
-  total: 5842,
-  available: 4217,
-  reserved: 328,
-};
-
-const orderStats = {
-  total: 2156,
-  pending: 43,
-  completed: 2113,
-};
-
-const monthlySales = [
-  { month: 'Jan', orders: 145 },
-  { month: 'Feb', orders: 132 },
-  { month: 'Mar', orders: 161 },
-  { month: 'Apr', orders: 187 },
-  { month: 'May', orders: 92 },
-];
-
 export default function DashboardPage() {
   const [currentDate, setCurrentDate] = useState('');
   const [showAllReviews, setShowAllReviews] = useState(false);
@@ -159,8 +32,61 @@ export default function DashboardPage() {
     );
   }, []);
 
+  const {data: dashboardData} = useAxios(`dashboard/overview`);
   
+  // Prepare stats data from API response
+  const memberStats = {
+    total: dashboardData?.result?.totalMembers || 0,
+    active: dashboardData?.result?.activeMembers || 0,
+    new: dashboardData?.result?.newMembers || 0,
+  };
 
+  const bookStats = {
+    total: dashboardData?.result?.totalBooks || 0,
+    available: dashboardData?.result?.availableBooks || 0,
+    reserved: dashboardData?.result?.totalBooks - dashboardData?.result?.availableBooks || 0,
+  };
+
+  const orderStats = {
+    total: dashboardData?.result?.totalOrders || 0,
+    pending: dashboardData?.result?.pendingOrders || 0,
+    completed: dashboardData?.result?.completedOrders || 0,
+  };
+
+  // Format recent orders from API
+  const recentOrders = dashboardData?.result?.recentOrders?.map(order => ({
+    id: order.id,
+    member: order.member,
+    book: order.book,
+    status: order.status,
+    date: order.date,
+  })) || [];
+
+  // Since the API doesn't provide these, we'll keep the dummy data or remove them
+  const popularBooks = [
+    { title: 'Looking Backward', author: 'Unknown', orders: 3, available: 1 },
+    { title: 'Under the Tree', author: 'Unknown', orders: 1, available: 1 },
+    { title: 'The Dries', author: 'Unknown', orders: 1, available: 1 },
+  ];
+
+  const bookReviews = [
+    {
+      id: 1,
+      bookName: 'Looking Backward',
+      userName: 'Member',
+      review: 'No review content available',
+      rating: 4,
+      date: '2025-05-01',
+    },
+  ];
+
+  const monthlySales = [
+    { month: 'Jan', orders: 10 },
+    { month: 'Feb', orders: 12 },
+    { month: 'Mar', orders: 16 },
+    { month: 'Apr', orders: 18 },
+    { month: 'May', orders: 5 },
+  ];
 
   return (
     <div className='flex h-screen bg-gray-100'>
@@ -363,7 +289,7 @@ export default function DashboardPage() {
                     {recentOrders.map((order) => (
                       <tr key={order.id} className='hover:bg-gray-50'>
                         <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
-                          #{order.id}
+                          #{order.id.split('-')[0]}
                         </td>
                         <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
                           {order.member}
@@ -472,12 +398,10 @@ function StatsCard({
 function StatusBadge({ status }) {
   let bgColor = 'bg-gray-100 text-gray-800';
 
-  if (status === 'Ready for pickup') {
+  if (status === 'Completed') {
     bgColor = 'bg-green-100 text-green-800';
-  } else if (status === 'Processing') {
+  } else if (status === 'Pending') {
     bgColor = 'bg-yellow-100 text-yellow-800';
-  } else if (status === 'Picked up') {
-    bgColor = 'bg-blue-100 text-blue-800';
   }
 
   return (
