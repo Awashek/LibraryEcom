@@ -512,9 +512,6 @@ export default function AddBook({ onClose, onSuccess }) {
                             </span>{' '}
                             or drag and drop
                           </p>
-                          <p className='text-xs text-gray-500 mt-1'>
-                            PNG, JPG, GIF up to 10MB
-                          </p>
                         </div>
                       )}
                       <input

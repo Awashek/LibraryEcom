@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from '../../utils/axios/axios';
 import { toast } from 'react-toastify';
 import BackButton from '../../components/common/BackButton';
 import useSignIn from 'react-auth-kit/hooks/useSignIn';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -11,7 +12,11 @@ export default function Login() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -38,7 +43,7 @@ export default function Login() {
             ...userDetails,
             role: userRole,
           },
-          remember: rememberMe,
+          remember: false, // Set to false since we removed the checkbox
         });
 
         if (success) {
@@ -110,33 +115,34 @@ export default function Login() {
                 >
                   PASSWORD
                 </label>
-                <input
-                  type='password'
-                  id='password'
-                  className='w-full p-2 border-b border-gray-300 focus:outline-none focus:border-gray-500'
-                  placeholder='Enter your password'
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
+                <div className='relative'>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    id='password'
+                    className='w-full p-2 border-b border-gray-300 focus:outline-none focus:border-gray-500 pr-10'
+                    placeholder='Enter your password'
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  <button
+                    type='button'
+                    className='absolute right-2 top-2 text-gray-500 focus:outline-none'
+                    onClick={togglePasswordVisibility}
+                    aria-label={
+                      showPassword ? 'Hide password' : 'Show password'
+                    }
+                  >
+                    {showPassword ? (
+                      <Eye className='h-5 w-5' />
+                    ) : (
+                      <EyeOff className='h-5 w-5' />
+                    )}
+                  </button>
+                </div>
               </div>
 
-              <div className='flex items-center justify-between'>
-                <div className='flex items-center'>
-                  <input
-                    type='checkbox'
-                    id='remember'
-                    className='rounded text-black focus:ring-black'
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                  />
-                  <label
-                    htmlFor='remember'
-                    className='ml-2 text-sm text-gray-700'
-                  >
-                    Remember Me
-                  </label>
-                </div>
+              <div className='flex justify-end'>
                 <Link
                   to='/reset-password'
                   className='text-sm text-gray-700 hover:underline'
@@ -146,17 +152,6 @@ export default function Login() {
               </div>
 
               <div>
-                <p className='text-xs text-gray-500 mb-4'>
-                  By logging in, you agree to the{' '}
-                  <a href='#' className='underline'>
-                    Terms & Condition
-                  </a>{' '}
-                  and our{' '}
-                  <a href='#' className='underline'>
-                    Privacy & Policy
-                  </a>
-                </p>
-
                 <button
                   type='submit'
                   className='w-full bg-black text-white py-2 px-4 rounded-full hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors'

@@ -32,8 +32,8 @@ export default function DashboardPage() {
     );
   }, []);
 
-  const {data: dashboardData} = useAxios(`dashboard/overview`);
-  
+  const { data: dashboardData } = useAxios(`dashboard/overview`);
+
   // Prepare stats data from API response
   const memberStats = {
     total: dashboardData?.result?.totalMembers || 0,
@@ -44,7 +44,9 @@ export default function DashboardPage() {
   const bookStats = {
     total: dashboardData?.result?.totalBooks || 0,
     available: dashboardData?.result?.availableBooks || 0,
-    reserved: dashboardData?.result?.totalBooks - dashboardData?.result?.availableBooks || 0,
+    reserved:
+      dashboardData?.result?.totalBooks -
+        dashboardData?.result?.availableBooks || 0,
   };
 
   const orderStats = {
@@ -54,13 +56,14 @@ export default function DashboardPage() {
   };
 
   // Format recent orders from API
-  const recentOrders = dashboardData?.result?.recentOrders?.map(order => ({
-    id: order.id,
-    member: order.member,
-    book: order.book,
-    status: order.status,
-    date: order.date,
-  })) || [];
+  const recentOrders =
+    dashboardData?.result?.recentOrders?.map((order) => ({
+      id: order.id,
+      member: order.member,
+      book: order.book,
+      status: order.status,
+      date: order.date,
+    })) || [];
 
   // Since the API doesn't provide these, we'll keep the dummy data or remove them
   const popularBooks = [
@@ -106,31 +109,11 @@ export default function DashboardPage() {
             </div>
 
             <div className='flex items-center space-x-4'>
-              <div className='relative'>
-                <input
-                  type='text'
-                  placeholder='Search...'
-                  className='pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
-                />
-                <Search
-                  className='absolute left-3 top-2.5 text-gray-400'
-                  size={18}
-                />
-              </div>
-
-              <div className='relative'>
-                <Bell className='text-gray-600 cursor-pointer' />
-                <span className='absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center'>
-                  3
-                </span>
-              </div>
-
               <div className='flex items-center cursor-pointer'>
                 <div className='h-8 w-8 rounded-full bg-blue-500 text-white flex items-center justify-center'>
                   <User size={18} />
                 </div>
                 <span className='ml-2 text-gray-700'>Admin</span>
-                <ChevronDown size={16} className='ml-1 text-gray-500' />
               </div>
             </div>
           </div>

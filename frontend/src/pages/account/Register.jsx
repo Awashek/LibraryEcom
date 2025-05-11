@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import BackButton from '../../components/common/BackButton';
 import axios from '../../utils/axios/axios';
+import { Eye, EyeOff, ChevronLeft, Loader } from 'lucide-react';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -15,6 +15,8 @@ export default function Register() {
     gender: '',
     address: '',
     imageUrl: null,
+    showPassword: false,
+    showConfirmPassword: false,
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -95,18 +97,24 @@ export default function Register() {
 
   return (
     <div
-      className='min-h-screen flex items-center justify-center bg-cover bg-center'
+      className='min-h-screen flex items-center justify-center bg-cover bg-center py-10 px-4'
       style={{
         backgroundImage: `url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')`,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
       }}
     >
-      <div className='bg-white overflow-hidden max-w-3xl w-full p-12 shadow-xl rounded-lg relative'>
-        <div className='absolute inset-0 z-0 bg-white'></div>
+      <div className='bg-white overflow-hidden max-w-3xl w-full p-8 md:p-12 shadow-xl rounded-lg relative'>
+        <div className='absolute inset-0 z-0 bg-white opacity-95'></div>
 
         <div className='relative z-10'>
-          <BackButton />
+          <button
+            onClick={() => navigate(-1)}
+            className='flex items-center gap-2 text-gray-700 hover:text-black transition-colors mb-6'
+          >
+            <ChevronLeft size={20} />
+            <span className='font-medium'>Back</span>
+          </button>
           <h1 className='text-3xl font-bold mb-6'>Welcome to Bookish</h1>
 
           <form onSubmit={handleSubmit}>
@@ -164,17 +172,35 @@ export default function Register() {
                 >
                   PASSWORD
                 </label>
-                <input
-                  type='password'
-                  id='password'
-                  name='password'
-                  className={`w-full p-2 border-b ${
-                    errors.password ? 'border-red-500' : 'border-gray-300'
-                  } focus:outline-none focus:border-gray-500`}
-                  placeholder='Enter your password'
-                  value={formData.password}
-                  onChange={handleChange}
-                />
+                <div className='relative'>
+                  <input
+                    type={formData.showPassword ? 'text' : 'password'}
+                    id='password'
+                    name='password'
+                    className={`w-full p-2 border-b ${
+                      errors.password ? 'border-red-500' : 'border-gray-300'
+                    } focus:outline-none focus:border-gray-500`}
+                    placeholder='Enter your password'
+                    value={formData.password}
+                    onChange={handleChange}
+                  />
+                  <button
+                    type='button'
+                    className='absolute right-2 top-2 text-gray-500 hover:text-gray-700'
+                    onClick={() =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        showPassword: !prev.showPassword,
+                      }))
+                    }
+                  >
+                    {formData.showPassword ? (
+                      <Eye size={18} />
+                    ) : (
+                      <EyeOff size={18} />
+                    )}
+                  </button>
+                </div>
                 <p className='text-xs text-gray-500 mt-1'>
                   Must be at least 8 characters
                 </p>
@@ -190,19 +216,37 @@ export default function Register() {
                 >
                   CONFIRM PASSWORD
                 </label>
-                <input
-                  type='password'
-                  id='confirmPassword'
-                  name='confirmPassword'
-                  className={`w-full p-2 border-b ${
-                    errors.confirmPassword
-                      ? 'border-red-500'
-                      : 'border-gray-300'
-                  } focus:outline-none focus:border-gray-500`}
-                  placeholder='Confirm your password'
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                />
+                <div className='relative'>
+                  <input
+                    type={formData.showConfirmPassword ? 'text' : 'password'}
+                    id='confirmPassword'
+                    name='confirmPassword'
+                    className={`w-full p-2 border-b ${
+                      errors.confirmPassword
+                        ? 'border-red-500'
+                        : 'border-gray-300'
+                    } focus:outline-none focus:border-gray-500`}
+                    placeholder='Confirm your password'
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                  />
+                  <button
+                    type='button'
+                    className='absolute right-2 top-2 text-gray-500 hover:text-gray-700'
+                    onClick={() =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        showConfirmPassword: !prev.showConfirmPassword,
+                      }))
+                    }
+                  >
+                    {formData.showConfirmPassword ? (
+                      <Eye size={18} />
+                    ) : (
+                      <EyeOff size={18} />
+                    )}
+                  </button>
+                </div>
                 {errors.confirmPassword && (
                   <p className='text-red-500 text-xs mt-1'>
                     {errors.confirmPassword}
@@ -261,31 +305,37 @@ export default function Register() {
                 >
                   PROFILE PICTURE (OPTIONAL)
                 </label>
-                <input
-                  type='file'
-                  id='imageUrl'
-                  name='imageUrl'
-                  className='w-full text-sm text-gray-500
-                                        file:mr-4 file:py-2 file:px-4
-                                        file:rounded-full file:border-0
-                                        file:text-sm file:font-semibold
-                                        file:bg-black file:text-white
-                                        hover:file:bg-gray-800'
-                  accept='image/*'
-                  onChange={handleChange}
-                />
-                <p className='text-xs text-gray-500 mt-1'>Max file size: 5MB</p>
+                <div className='relative'>
+                  <input
+                    type='file'
+                    id='imageUrl'
+                    name='imageUrl'
+                    className='w-full text-sm text-gray-500
+                              file:mr-4 file:py-2.5 file:px-4
+                              file:rounded-full file:border-0
+                              file:text-sm file:font-medium
+                              file:bg-black file:text-white
+                              hover:file:bg-gray-800 cursor-pointer'
+                    accept='image/*'
+                    onChange={handleChange}
+                  />
+                </div>
               </div>
 
-              <div>
-                <button
-                  type='submit'
-                  disabled={isLoading}
-                  className='w-full bg-black text-white py-2 px-4 rounded-full hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors disabled:opacity-70'
-                >
-                  {isLoading ? 'Processing...' : 'Sign Up'}
-                </button>
-              </div>
+              <button
+                type='submit'
+                disabled={isLoading}
+                className='w-full bg-black text-white py-3 px-4 rounded-full hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors disabled:opacity-70 font-medium'
+              >
+                {isLoading ? (
+                  <span className='flex items-center justify-center gap-2'>
+                    <Loader size={20} className='animate-spin' />
+                    Processing...
+                  </span>
+                ) : (
+                  'Sign Up'
+                )}
+              </button>
 
               <div className='text-center text-sm text-gray-600'>
                 Already have an account?{' '}
