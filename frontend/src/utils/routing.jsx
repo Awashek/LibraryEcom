@@ -5,37 +5,31 @@ import {
   Route,
   useLocation,
 } from 'react-router-dom';
-import TestConnection from '../pages/admin/TestConnection'; // adjust path
 import Login from '../pages/account/Login';
 import Register from '../pages/account/Register';
 import HomePage from '../pages/user/HomePage';
-import WishlistPage from '../pages/user/WishlistPage';
 import CartPage from '../pages/user/CartPage';
 import BookDetails from '../pages/user/BookDetails';
 import ProfileLayout from '../layouts/ProfileLayout';
 import ProfilePage from '../pages/user/profile/ProfilePage';
-import RentedBooksPage from '../pages/user/profile/RentedBooksPage';
-import BookedBooksPage from '../pages/user/profile/BookedBooksPage';
-import SavedBooksPage from '../pages/user/profile/SavedBooksPage';
-import BooksHistoryPage from '../pages/user/profile/BookHistoryPage';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import DashboardPage from '../pages/admin/DashboardPage';
 import AllBooksPage from '../pages/user/AllBooksPage';
-import GenresAndTheam from '../pages/user/GenresAndThem';
 import ProtectedRoute from './ProtectedRoute';
 import UserManagement from '../pages/admin/UserManagement';
 import AnnouncementPage from '../pages/admin/AnnouncementPage';
 import AddAnnouncement from '../components/Admin/Announcement/AddAnnouncement';
-import AuthorDescription from '../pages/user/AuthorDescription';
 import BooksManagementPage from '../pages/admin/BooksManagementPage';
 import AddBook from '../components/Admin/BooksManagement/AddBook';
 import StaffOrdersPanel from '../pages/staff/Orders';
 import AuthorsManagementPage from '../pages/admin/AuthorManagementPage';
 import AddAuthor from '../components/Admin/AuthorManagement/AddAuthor';
 import UpdateAuthor from '../components/Admin/AuthorManagement/UpdateAuthor';
-import DiscountPage from '../pages/admin/DiscountModal';
-import MyOrders from '../pages/user/MyOrders';
+import MyOrders from '../pages/user/profile/MyOrders';
+import WishlistPage from '../pages/user/profile/WishlistPage';
+import MyReviewsPage from '../pages/user/profile/MyReviewsPage';
+import DiscountModal from '../components/Admin/BooksManagement/DiscountModal';
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -74,36 +68,21 @@ const Routing = () => {
           <Route path='/' element={<HomePage />} />
           <Route path='/homepage' element={<HomePage />} />
           <Route path='/allbooks' element={<AllBooksPage />} />
-          <Route path='/test-connection' element={<TestConnection />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
-          <Route path='genresandthem' element={<GenresAndTheam />} />
+          <Route path='/book-details/:bookId' element={<BookDetails />} />
 
           {/* Protected Routes for Users (regular users) */}
-          <Route element={<ProtectedRoute allowedRoles={['User']} />} />
-          <Route path='/wishlist' element={<WishlistPage />} />
-          <Route path='/cart' element={<CartPage />} />
-          <Route path='/book-details/:bookId' element={<BookDetails />} />
-          <Route path='authordescription' element={<AuthorDescription />} />
-          <Route path='/myorders' element={<MyOrders />} />
+          <Route element={<ProtectedRoute allowedRoles={['User']} />}>
+            <Route path='/cart' element={<CartPage />} />
 
-
-          {/* Profile routes */}
-          <Route path='/profile' element={<ProfileLayout />}>
-            <Route index element={<ProfilePage />} />
-            <Route path='rented' element={<RentedBooksPage />} />
-            <Route path='booked' element={<BookedBooksPage />} />
-            <Route path='saved' element={<SavedBooksPage />} />
-            <Route path='history' element={<BooksHistoryPage />} />
-          </Route>
-
-          {/* Profile routes */}
-          <Route path='/profile' element={<ProfileLayout />}>
-            <Route index element={<ProfilePage />} />
-            <Route path='rented' element={<RentedBooksPage />} />
-            <Route path='booked' element={<BookedBooksPage />} />
-            <Route path='saved' element={<SavedBooksPage />} />
-            <Route path='history' element={<BooksHistoryPage />} />
+            {/* Profile routes */}
+            <Route path='/profile' element={<ProfileLayout />}>
+              <Route index element={<ProfilePage />} />
+              <Route path='my-reviews' element={<MyReviewsPage />} />
+              <Route path='wishlist' element={<WishlistPage />} />
+              <Route path='myorders' element={<MyOrders />} />
+            </Route>
           </Route>
 
           {/* Protected Routes for Admin only */}
@@ -114,7 +93,7 @@ const Routing = () => {
             <Route path='/announcement' element={<AnnouncementPage />} />
             <Route path='/add-announcement' element={<AddAnnouncement />} />
             <Route path='/UserManagement' element={<UserManagement />} />
-            <Route path='/discount' element={<DiscountPage />} />
+            <Route path='/discount' element={<DiscountModal />} />
             <Route
               path='/author-management'
               element={<AuthorsManagementPage />}
