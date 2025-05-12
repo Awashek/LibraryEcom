@@ -36,6 +36,7 @@ const AllBooksPage = () => {
     `book?pageNumber=${currentPage}&pageSize=${pageSize}&search=${searchQuery}`
   );
 
+
   useEffect(() => {
     if (booksData) {
       setBooks(booksData.result || []);

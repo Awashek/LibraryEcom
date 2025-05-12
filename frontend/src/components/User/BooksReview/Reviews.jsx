@@ -4,21 +4,28 @@ import useAxios from '../../../utils/axios/useAxios';
 
 // Review Card Component
 const ReviewCard = ({ rating, comment, name, image }) => {
+
+   const getInitials = (fullName) => {
+    if (!fullName) return '';
+    const parts = fullName.trim().split(' ');
+    return parts.slice(0, 2).map((p) => p[0]).join('').toUpperCase();
+  };
+
   return (
     <div className='flex flex-col gap-2 py-4 border-b border-gray-200'>
       <div className='flex items-center gap-3'>
         <div className='w-10 h-10 rounded-full bg-gray-200 overflow-hidden'>
-          {image ? (
+          {/* {image ? (
             <img
               src={image}
               alt='user'
               className='w-full h-full object-cover'
             />
-          ) : (
-            <div className='w-full h-full flex items-center justify-center text-xs text-gray-500'>
-              {name.charAt(0).toUpperCase()}
+          ) : ( */}
+             <div className='w-full h-full flex items-center justify-center text-xs font-semibold text-gray-700 bg-teal-100'>
+              {getInitials(name)}
             </div>
-          )}
+          {/* )} */}
         </div>
         <div>
           <p className='font-medium text-sm'>{name}</p>

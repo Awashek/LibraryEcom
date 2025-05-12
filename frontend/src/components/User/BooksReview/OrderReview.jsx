@@ -69,6 +69,19 @@ export default function BookReviewSystem({ bookId, userId }) {
     checkUserReview();
   }, [checkUserReview]);
 
+
+  useEffect(() => {
+  // Reset state when bookId changes
+  setReview(null);
+  setRating(5);
+  setReviewText('');
+  setUserHasReview(false);
+  setIsEditing(false);
+  setIsReviewing(false);
+  setIsDeleting(false);
+}, [bookId]);
+
+
   const handleSubmitReview = (e) => {
     e.preventDefault();
     const userId = getUserId();
