@@ -4,27 +4,26 @@ import useSignOut from 'react-auth-kit/hooks/useSignOut';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useNotificationHub from './NotificationHub/useNotificationHub';
-import { Heart } from 'lucide-react';
-import { ShoppingCart } from 'lucide-react';
-import { Bell } from 'lucide-react';
+import { Heart, ShoppingCart, Bell, User } from 'lucide-react';
 import useAxios from '../utils/axios/useAxios';
+import useAuthUser from 'react-auth-kit/hooks/useAuthUser';
 
 const Navbar = () => {
   const [showAccountDropdown, setShowAccountDropdown] = useState(false);
   const [showGenreDropdown, setShowGenreDropdown] = useState(false);
-  const [showNotificationDropdown, setShowNotificationDropdown] =
-    useState(false);
-
+  const [showNotificationDropdown, setShowNotificationDropdown] = useState(false);
+  
   const { notifications } = useNotificationHub();
   const signOut = useSignOut();
   const navigate = useNavigate();
+  const authUser = useAuthUser(); // Get the authenticated user
+  const isAuthenticated = !!authUser; // Check if user is logged in
+  
   const { data: MyOrderData } = useAxios(`order/my-orders`);
-  console.log(MyOrderData, 'MyOrderData');
-
   const location = useLocation();
+  
   const isHomePage = location.pathname === '/';
-  const isGenrePage =
-    location.pathname === '/genresandthem' || location.pathname === '/allbooks';
+  const isGenrePage = location.pathname === '/genresandthem' || location.pathname === '/allbooks';
 
   const toggleAccountDropdown = () => {
     setShowAccountDropdown(!showAccountDropdown);
@@ -63,7 +62,7 @@ const Navbar = () => {
               />
             </Link>
           </div>
-
+          
           {/* Center Navigation */}
           <div className='hidden md:flex items-center space-x-1'>
             <Link
@@ -89,6 +88,7 @@ const Navbar = () => {
               </svg>
               Home
             </Link>
+            
             <div className='relative'>
               <Link
                 to='/allbooks'
@@ -137,16 +137,16 @@ const Navbar = () => {
               )}
             </div>
           </div>
-
+          
           {/* Right Navigation */}
           <div className='flex items-center space-x-4'>
             <Link
               to='/cart'
-              className='text-gray-600 hover:text-gray-900 focus:outline-none'
+              className='text-gray-600 hover:text-gray-900 focus:outline-none pb-2'
             >
               <ShoppingCart />
             </Link>
-
+            
             {/* Notification Icon */}
             <div className='relative'>
               <button
@@ -155,12 +155,11 @@ const Navbar = () => {
               >
                 <Bell />
                 {notifications.length > 0 && (
-                  <span className='absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full '>
+                  <span className='absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1'>
                     {notifications.length}
                   </span>
                 )}
               </button>
-
               {showNotificationDropdown && (
                 <>
                   <div
@@ -189,87 +188,70 @@ const Navbar = () => {
                 </>
               )}
             </div>
-
-            {/* Account Icon */}
-            <div className='relative'>
-              <button
-                className='text-gray-600 hover:text-gray-900 focus:outline-none'
-                onClick={toggleAccountDropdown}
+            
+            {/* Authentication Section */}
+            {!isAuthenticated ? (
+              <Link
+                to='/login'
+                className='bg-gray-900 text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors duration-300'
               >
-                <svg
-                  className='h-6 w-6'
-                  fill='none'
-                  viewBox='0 0 24 24'
-                  stroke='currentColor'
+                Login
+              </Link>
+            ) : (
+              <div className='relative'>
+                <button
+                  className='text-gray-600 hover:text-gray-900 focus:outline-none'
+                  onClick={toggleAccountDropdown}
                 >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'
-                  />
-                </svg>
-              </button>
-
-              {showAccountDropdown && (
-                <>
-                  <div
-                    className='fixed inset-0 z-10'
-                    onClick={closeDropdowns}
-                  ></div>
-                  <div className='absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 border border-gray-200'>
-                    <Link
-                      to='/login'
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-                    >
-                      Login
-                    </Link>
-                    <Link
-                      to='/register'
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-                    >
-                      Register
-                    </Link>
-                    <div className='border-t border-gray-100'></div>
-                    <Link
-                      to='/profile'
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-                    >
-                      My Profile
-                    </Link>
-                    <div className='border-t border-gray-100'></div>
-                    <Link
-                      to='/profile/myorders'
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-                    >
-                      My Orders
-                    </Link>
-                    <div className='border-t border-gray-100'></div>
-                    <Link
-                      to='/profile/wishlist'
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-                    >
-                      My WishList
-                    </Link>
-                    <div className='border-t border-gray-100'></div>
-                    <Link
-                      to='/profile/my-reviews'
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-                    >
-                      My Reviews
-                    </Link>
-                    <div className='border-t border-gray-100'></div>
-                    <button
-                      onClick={handleLogout}
-                      className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-                    >
-                      Logout
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
-
+                  <User className='h-6 w-6' />
+                </button>
+                {showAccountDropdown && (
+                  <>
+                    <div
+                      className='fixed inset-0 z-10'
+                      onClick={closeDropdowns}
+                    ></div>
+                    <div className='absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 border border-gray-200'>
+                      <Link
+                        to='/profile'
+                        className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                      >
+                        My Profile
+                      </Link>
+                      <div className='border-t border-gray-100'></div>
+                      <Link
+                        to='/profile/myorders'
+                        className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                      >
+                        My Orders
+                      </Link>
+                      <div className='border-t border-gray-100'></div>
+                      <Link
+                        to='/profile/wishlist'
+                        className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                      >
+                        My WishList
+                      </Link>
+                      <div className='border-t border-gray-100'></div>
+                      <Link
+                        to='/profile/my-reviews'
+                        className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                      >
+                        My Reviews
+                      </Link>
+                      <div className='border-t border-gray-100'></div>
+                      <button
+                        onClick={handleLogout}
+                        className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+            
             {/* Mobile Hamburger */}
             <button className='md:hidden text-gray-600 hover:text-gray-900 focus:outline-none'>
               <svg
