@@ -13,6 +13,8 @@ export default function StaffOrdersPanel() {
   const axios = useAxiosAuth();
   const { data: orderData, loading, error, refetch } = useAxios('order?pageNumber=1&pageSize=12&search=');
 
+  console.log("orderData", orderData);
+
   useEffect(() => {
     if (orderData?.result) {
       const transformedOrders = orderData.result.map(order => ({
@@ -21,7 +23,7 @@ export default function StaffOrdersPanel() {
         orderId: `#OD${order.id.substr(0, 5).toUpperCase()}`,
         orderDate: new Date(order.orderDate).toLocaleDateString(),
         productName: 'Book',
-        quantity: order.orderItems?.length || 1,
+        quantity: order.items?.reduce((acc, item) => acc + item.quantity, 0) || 1, // ✅ Corrected
         claimExpiry: order.claimExpiry ? new Date(order.claimExpiry).toLocaleDateString() : 'N/A',
         totalAmount: `Rs. ${order.totalAmount || 0}`,
         status: order.completionDate ? 'Completed' : 'Pending',
