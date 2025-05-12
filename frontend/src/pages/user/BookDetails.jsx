@@ -358,7 +358,6 @@ const BookDetails = () => {
               </div>
             )}
 
-            {/* Reviews Section */}
             <div className="bg-white rounded-2xl p-8 shadow-md border border-gray-100">
               <h2 className="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-3">
                 <Star size={22} className="text-teal-600" />
@@ -368,9 +367,7 @@ const BookDetails = () => {
             </div>
           </div>
 
-          {/* Right column - Special offers and related books */}
           <div className="space-y-8">
-            {/* Book details card */}
             <div className="bg-white rounded-2xl p-8 shadow-md border border-gray-100 sticky top-8">
               <h2 className="text-xl font-bold mb-6 text-gray-800">
                 Product Details

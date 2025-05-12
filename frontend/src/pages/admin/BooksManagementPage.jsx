@@ -50,6 +50,8 @@ export default function BooksManagementPage() {
   );
   const [products, setProducts] = useState([]);
 
+  console.log('booksData', booksData);
+
   useEffect(() => {
     if (booksData?.result) {
       setProducts(booksData.result);
@@ -71,7 +73,6 @@ export default function BooksManagementPage() {
     setShowEditModal(true);
   };
 
-  // Add this function to open the delete confirmation modal
   const handleDelete = (bookId, bookTitle) => {
     setBookToDelete({ id: bookId, title: bookTitle });
     setIsDeleteModalOpen(true);
@@ -96,7 +97,6 @@ export default function BooksManagementPage() {
       });
   };
 
-  // Disable body scroll when modal is open
   useEffect(() => {
     if (showAddModal || showEditModal || isDeleteModalOpen) {
       document.body.style.overflow = 'hidden';

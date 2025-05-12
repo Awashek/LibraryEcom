@@ -15,9 +15,7 @@ export default function StaffOrdersPanel() {
   const [verifyError, setVerifyError] = useState(null);
   const [statusFilter, setStatusFilter] = useState("All");
   const signOut = useSignOut();
-    const navigate = useNavigate();
-
-
+  const navigate = useNavigate();
 
   const axios = useAxiosAuth();
   const {

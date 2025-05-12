@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { Search, ChevronDown, Tag } from "lucide-react";
 
 const AllBooksPage = () => {
-  // State for search, sort, pagination
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("Title A-Z");
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,7 +16,6 @@ const AllBooksPage = () => {
   const navigate = useNavigate();
   const pageSize = 4;
 
-  // Fixed genres based on the enum
   const genres = [
     "Fiction",
     "NonFiction",
