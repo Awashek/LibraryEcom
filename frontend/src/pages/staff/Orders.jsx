@@ -19,6 +19,8 @@ export default function StaffOrdersPanel() {
     refetch,
   } = useAxios("order?pageNumber=1&pageSize=12&search=");
 
+  console.log("orderData", orderData);
+
   useEffect(() => {
     if (orderData?.result) {
       const transformedOrders = orderData.result.map((order) => ({
