@@ -33,7 +33,7 @@ export default function DashboardPage() {
   }, []);
 
   const { data: dashboardData } = useAxios(`dashboard/overview`);
-
+  console.log(dashboardData);
   // Prepare stats data from API response
   const memberStats = {
     total: dashboardData?.result?.totalMembers || 0,
