@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import useAxios from "../../utils/axios/useAxios";
 import useAxiosAuth from "../../utils/axios/useAxiosAuth";
 import { toast } from "react-toastify";
+import useSignOut from 'react-auth-kit/hooks/useSignOut';
+import { useNavigate } from 'react-router-dom';
+
+
 
 export default function StaffOrdersPanel() {
   const [orders, setOrders] = useState([]);
@@ -10,6 +14,10 @@ export default function StaffOrdersPanel() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [verifyError, setVerifyError] = useState(null);
   const [statusFilter, setStatusFilter] = useState("All");
+  const signOut = useSignOut();
+    const navigate = useNavigate();
+
+
 
   const axios = useAxiosAuth();
   const {
@@ -55,10 +63,10 @@ export default function StaffOrdersPanel() {
     }
   }, [orderData]);
 
-  const handleLogout = () => {
+   const handleLogout = () => {
     signOut(); // This will clear the auth state and cookies
-    toast.success("Logged out successfully");
-    navigate("/homepage"); // Redirect to login page after logout
+    toast.success('Logged out successfully');
+    navigate('/homepage'); // Redirect to homepage after logout
   };
 
   const handleVerify = () => {
