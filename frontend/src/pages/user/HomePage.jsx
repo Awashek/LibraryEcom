@@ -1,80 +1,35 @@
 import { useState, useEffect } from 'react';
 import { ArrowRight } from 'lucide-react';
 import PopularGenres from '../../components/User/Books/PopularGenres';
-import ReadesOnSale from '../../components/User/Books/ReadesOnSale';
 import { useNavigate } from 'react-router-dom';
 import useAxios from '../../utils/axios/useAxios';
+import RecommendedBooks from '../../components/User/Books/RecommendedBooks';
 
 const HomePage = () => {
-
   const navigate = useNavigate();
 
   const handleExploreClick = () => {
     navigate('/allbooks');
   };
-  // Mock data for featured books
-  const [featuredBooks, setFeaturedBooks] = useState([
-    {
-      id: 1,
-      title: 'I Want A Better Catastrophe',
-      author: 'Andrew Boyd',
-      cover: '/images/catastrophe-book.jpg',
-      price: 19.99,
-      description:
-        'Navigating the Climate Crisis with Grief, Hope, and Gallows Humor',
-    },
-    {
-      id: 2,
-      title: 'The Mentor',
-      author: 'Sarah Hewlett',
-      cover: '/images/mentor-book.jpg',
-      price: 18.5,
-      description: 'How to Find a Mentor to Help Track Your Career',
-    },
-    {
-      id: 3,
-      title: 'Time to Come',
-      author: 'Emily Leitch',
-      cover: '/images/time-book.jpg',
-      price: 21.99,
-      description: 'A New Story',
-    },
-    {
-      id: 4,
-      title: 'The Silent Path',
-      author: 'Michael Roberts',
-      cover: '/images/placeholder-book.jpg',
-      price: 15.99,
-      description: 'A Journey Through Mindfulness',
-    },
-    {
-      id: 5,
-      title: "Ocean's Echo",
-      author: 'Lisa Chen',
-      cover: '/images/placeholder-book.jpg',
-      price: 23.5,
-      description: 'Tales from the Deep',
-    },
-  ]);
 
   // Categories
-  const categories = [
+  const genres = [
     'Fiction',
-    'Non-fiction',
+    'NonFiction',
+    'Mystery',
+    'Thriller',
+    'Romance',
+    'Fantasy',
+    'ScienceFiction',
     'Biography',
-    'Self-help',
-    'Science',
     'History',
-    'Business',
-    "Children's Books",
-    'Poetry',
-    'Cookbooks',
+    'Education',
+    'Horror',
   ];
 
   const { data: booksData, refetch } = useAxios(
-    `book?pageNumber=1&pageSize=12&search=`,
-  )
-
+    `book?pageNumber=1&pageSize=12&search=`
+  );
 
   // For placeholder images
   useEffect(() => {
@@ -96,9 +51,10 @@ const HomePage = () => {
                 Experience the joy of reading with us
               </p>
               <div className='mt-8 flex space-x-4'>
-                <button 
-                onClick={handleExploreClick}
-                className='bg-white text-black py-2 px-8 rounded-full flex items-center gap-2 hover:gap-3 transition-all duration-200'>
+                <button
+                  onClick={handleExploreClick}
+                  className='bg-white text-black py-2 px-8 rounded-full flex items-center gap-2 hover:gap-3 transition-all duration-200'
+                >
                   Explore Now{' '}
                   <ArrowRight
                     size={18}
@@ -119,7 +75,7 @@ const HomePage = () => {
           </div>
         </div>
       </div>
-    <ReadesOnSale />
+      <RecommendedBooks />
       <PopularGenres />
     </div>
   );
