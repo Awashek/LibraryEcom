@@ -20,6 +20,9 @@ export default function MyOrders() {
   const [loading, setLoading] = useState(true);
   const [canceling, setCanceling] = useState(null);
   const [activeTab, setActiveTab] = useState('All');
+  // New state for the cancel confirmation popup
+  const [showCancelPopup, setShowCancelPopup] = useState(false);
+  const [orderToCancel, setOrderToCancel] = useState(null);
 
   useEffect(() => {
     fetchOrders();
@@ -39,10 +42,21 @@ export default function MyOrders() {
       .finally(() => setLoading(false));
   };
 
-  const handleCancel = (orderId) => {
-    setCanceling(orderId);
+  // Function to show the cancel confirmation popup
+  const showCancelConfirmation = (order) => {
+    setOrderToCancel(order);
+    setShowCancelPopup(true);
+  };
+
+  // Function to handle the actual cancellation after confirmation
+  const confirmCancel = () => {
+    if (!orderToCancel) return;
+    
+    setCanceling(orderToCancel.id);
+    setShowCancelPopup(false);
+    
     axios
-      .put(`/api/order/cancel/${orderId}`)
+      .put(`/api/order/cancel/${orderToCancel.id}`)
       .then(() => {
         toast.success('Order cancelled successfully');
         fetchOrders();
@@ -53,6 +67,7 @@ export default function MyOrders() {
       })
       .finally(() => {
         setCanceling(null);
+        setOrderToCancel(null);
       });
   };
 
@@ -268,7 +283,7 @@ export default function MyOrders() {
                   {order.status === 'Pending' && (
                     <button
                       disabled={canceling === order.id}
-                      onClick={() => handleCancel(order.id)}
+                      onClick={() => showCancelConfirmation(order)}
                       className='px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 flex items-center'
                     >
                       {canceling === order.id ? (
@@ -287,6 +302,38 @@ export default function MyOrders() {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+        
+        {/* Cancel Confirmation Popup */}
+        {showCancelPopup && orderToCancel && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full mx-4">
+              <div className="flex items-center mb-4 text-red-600">
+                <AlertTriangle className="h-6 w-6 mr-2" />
+                <h3 className="text-lg font-semibold">Cancel Order</h3>
+              </div>
+              
+              <p className="text-gray-700 mb-4">
+                Are you sure you want to cancel order #{orderToCancel.id.slice(0, 8).toUpperCase()}? 
+                This action cannot be undone.
+              </p>
+              
+              <div className="flex items-center justify-between gap-4 mt-6">
+                <button
+                  onClick={() => setShowCancelPopup(false)}
+                  className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 flex-1"
+                >
+                  No, Keep Order
+                </button>
+                <button
+                  onClick={confirmCancel}
+                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 flex-1"
+                >
+                  Yes, Cancel Order
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>

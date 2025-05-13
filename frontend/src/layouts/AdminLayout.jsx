@@ -2,7 +2,7 @@ import { useState } from 'react';
 import useSignOut from 'react-auth-kit/hooks/useSignOut';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-
+import { Link } from 'react-router-dom';
 export default function AdminLayout() {
   const signOut = useSignOut();
   const navigate = useNavigate();
@@ -26,22 +26,15 @@ export default function AdminLayout() {
 
   return (
     <aside className='bg-gray-900 text-gray-400 p-4 min-h-screen shadow-lg w-72'>
-      <a
-        href='/'
-        onClick={(e) => {
-          e.preventDefault();
-          handleNavigation('/');
-        }}
-        className='flex items-center mb-10 p-4'
-      >
-        {/* <img
-          src='../../images/Logo2.png'
-          alt='Bookish Logo'
-          width='150'
-          height='40'
-        /> */}
-        <h1 className='text-4xl font-bold'>BOOKISH</h1>
-      </a>
+      <div className='flex items-center pl-14 pt-4 pb-4'>
+          <Link to='' className='flex items-center'>
+            <img
+              className='h-5 w-auto'
+              src='/images/BOOKISH.svg'
+              alt='BookShop Logo'
+            />
+          </Link>
+        </div>
 
       <nav className='flex flex-col gap-1'>
         <div className='text-xs uppercase tracking-wider py-3 px-2 text-gray-500 font-medium'>

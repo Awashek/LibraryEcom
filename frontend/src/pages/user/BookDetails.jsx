@@ -11,6 +11,13 @@ import {
   Star,
   ChevronLeft,
   ShoppingCart,
+} from "lucide-react";
+import Reviews from "../../components/User/BooksReview/Reviews";
+import { useParams, Link } from "react-router-dom";
+import useAxios from "../../utils/axios/useAxios";
+import useAxiosAuth from "../../utils/axios/useAxiosAuth";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 } from 'lucide-react';
 import Reviews from '../../components/User/BooksReview/Reviews';
 import { useParams, Link } from 'react-router-dom';
@@ -27,6 +34,7 @@ const BookDetails = () => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const { data: bookData, refetch } = useAxios(`book/${bookId}`);
   const [wishlistId, setWishlistId] = useState(null);
+  const navigate = useNavigate();
   const [reviews, setReviews] = useState([]);
   const [averageRating, setAverageRating] = useState(null);
 
@@ -139,9 +147,14 @@ const BookDetails = () => {
         }
       )
       .then(() => {
+        toast.success("Book added to cart!");
+        navigate("/cart");
         toast.success('Book added to cart!');
       })
       .catch((error) => {
+        console.error("Add to Cart Error:", error);
+        toast.error("You need login to add book to cart");
+        navigate("/login");
         console.error('Add to Cart Error:', error);
         toast.error('Failed to add book to cart');
       });

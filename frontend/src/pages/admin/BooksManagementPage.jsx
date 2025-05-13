@@ -13,6 +13,7 @@ import {
   ChevronLeft,
   ChevronRight,
   X,
+  ArrowUpDown,
 } from 'lucide-react';
 import DiscountModal from '../../components/Admin/BooksManagement/DiscountModal';
 
@@ -40,6 +41,7 @@ export default function BooksManagementPage() {
 
   const [showFilters, setShowFilters] = useState(false);
   const [filterStatus, setFilterStatus] = useState('all');
+  const [priceSort, setPriceSort] = useState('none');
   const totalPages = 10;
   const axios = useAxiosAuth();
 
@@ -109,14 +111,34 @@ export default function BooksManagementPage() {
     };
   }, [showAddModal, showEditModal, isDeleteModalOpen]);
 
-  const filteredProducts =
-    filterStatus === 'all'
+  // Filter books by availability and sort by price
+  const getFilteredAndSortedProducts = () => {
+    // First filter by availability
+    let filteredBooks = filterStatus === 'all'
       ? products
       : products.filter((product) =>
           filterStatus === 'available'
             ? product.isAvailable
             : !product.isAvailable
         );
+    
+    // Then sort by price
+    if (priceSort !== 'none') {
+      filteredBooks = [...filteredBooks].sort((a, b) => {
+        const priceA = a.validatedDiscount 
+          ? calculateDiscountedPrice(a.basePrice, a.validatedDiscount.discountPercentage)
+          : a.basePrice;
+        
+        const priceB = b.validatedDiscount
+          ? calculateDiscountedPrice(b.basePrice, b.validatedDiscount.discountPercentage)
+          : b.basePrice;
+        
+        return priceSort === 'asc' ? priceA - priceB : priceB - priceA;
+      });
+    }
+    
+    return filteredBooks;
+  };
 
   const calculateDiscountedPrice = (price, discount) => {
     if (!discount) return Math.round(price);
@@ -195,13 +217,28 @@ export default function BooksManagementPage() {
                     <option value='unavailable'>Not Available</option>
                   </select>
                 </div>
+                
+                <div>
+                  <label className='block text-sm font-medium text-gray-700 mb-1'>
+                    Price Sort
+                  </label>
+                  <select
+                    value={priceSort}
+                    onChange={(e) => setPriceSort(e.target.value)}
+                    className='p-2 border border-gray-300 rounded-md w-full'
+                  >
+                    <option value='none'>Default</option>
+                    <option value='asc'>Price: Low to High</option>
+                    <option value='desc'>Price: High to Low</option>
+                  </select>
+                </div>
               </div>
             </div>
           )}
 
           {/* Grid View */}
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
-            {filteredProducts.map((product) => (
+            {getFilteredAndSortedProducts().map((product) => (
               <div
                 key={product.id}
                 className='bg-gray-50 rounded-xl shadow-lg p-4 relative hover:shadow-xl transition-shadow'
