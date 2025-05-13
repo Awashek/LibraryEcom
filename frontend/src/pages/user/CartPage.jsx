@@ -7,6 +7,9 @@ const CartPage = () => {
   const axios = useAxiosAuth();
   const [cartItems, setCartItems] = useState([]);
   const { data: cartData, refetch } = useAxios('Cart');
+  const [showClearModal, setShowClearModal] = useState(false);
+  const [showRemoveModal, setShowRemoveModal] = useState(false);
+  const [itemToRemove, setItemToRemove] = useState(null);
 
   console.log(cartData, "cartData");
 
@@ -36,25 +39,35 @@ const CartPage = () => {
       .catch(() => toast.error("Failed to decrease quantity"));
   };
 
-  const removeItem = (cartId) => {
-    axios.delete(`/api/Cart/${cartId}`)
+  const confirmRemoveItem = (cartId) => {
+    setItemToRemove(cartId);
+    setShowRemoveModal(true);
+  };
+
+  const removeItem = () => {
+    axios.delete(`/api/Cart/${itemToRemove}`)
       .then(() => {
         toast.success("Removed from cart");
-        setCartItems(prev => prev.filter(item => item.id !== cartId));
+        setCartItems(prev => prev.filter(item => item.id !== itemToRemove));
+        setShowRemoveModal(false);
+        setItemToRemove(null);
       })
       .catch(() => toast.error("Failed to remove item"));
   };
-  
+
+  const confirmClearCart = () => {
+    setShowClearModal(true);
+  };
 
   const clearCart = () => {
     axios.delete('/api/Cart/clear-all')
       .then(() => {
         toast.success("Cart cleared");
         setCartItems([]);
+        setShowClearModal(false);
       })
       .catch(() => toast.error("Failed to clear cart"));
   };
-  
 
   const calculateTotals = () => {
     const subtotal = cartItems.reduce((total, item) => {
@@ -108,7 +121,10 @@ const CartPage = () => {
                             <h3 className="text-lg font-medium">{item.book.title}</h3>
                             <p className="mt-2 font-medium">NPR {item.book.basePrice.toFixed(2)}</p>
                           </div>
-                          <button onClick={() => removeItem(item.id)} className="text-gray-400 hover:text-red-500">
+                          <button 
+                            onClick={() => confirmRemoveItem(item.id)} 
+                            className="text-gray-400 hover:text-red-500"
+                          >
                             ❌
                           </button>
                         </div>
@@ -133,7 +149,12 @@ const CartPage = () => {
 
               <div className="mt-6 flex justify-between items-center">
                 <button className="text-blue-600 hover:text-blue-800">Continue Shopping</button>
-                <button onClick={clearCart} className="text-red-600 hover:text-red-800">Clear Cart</button>
+                <button 
+                  onClick={confirmClearCart} 
+                  className="text-red-600 hover:text-red-800"
+                >
+                  Clear Cart
+                </button>
               </div>
             </div>
 
@@ -155,6 +176,57 @@ const CartPage = () => {
                   className="mt-6 w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700"
                 >
                   Proceed to Checkout
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Clear Cart Confirmation Modal */}
+        {showClearModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full">
+              <h3 className="text-lg font-semibold mb-4">Clear Cart</h3>
+              <p className="mb-6">Are you sure you want to remove all items from your cart?</p>
+              <div className="flex justify-end space-x-4">
+                <button
+                  onClick={() => setShowClearModal(false)}
+                  className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={clearCart}
+                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                >
+                  Clear Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Remove Item Confirmation Modal */}
+        {showRemoveModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full">
+              <h3 className="text-lg font-semibold mb-4">Remove Item</h3>
+              <p className="mb-6">Are you sure you want to remove this item from your cart?</p>
+              <div className="flex justify-end space-x-4">
+                <button
+                  onClick={() => {
+                    setShowRemoveModal(false);
+                    setItemToRemove(null);
+                  }}
+                  className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={removeItem}
+                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                >
+                  Remove
                 </button>
               </div>
             </div>

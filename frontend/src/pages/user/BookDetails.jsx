@@ -17,6 +17,7 @@ import { useParams, Link } from "react-router-dom";
 import useAxios from "../../utils/axios/useAxios";
 import useAxiosAuth from "../../utils/axios/useAxiosAuth";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 // Main Book Details Component
 const BookDetails = () => {
@@ -27,6 +28,7 @@ const BookDetails = () => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const { data: bookData, refetch } = useAxios(`book/${bookId}`);
   const [wishlistId, setWishlistId] = useState(null);
+  const navigate = useNavigate();
 
   console.log("Book Data:", bookData);
   useEffect(() => {
@@ -138,10 +140,12 @@ const BookDetails = () => {
       )
       .then(() => {
         toast.success("Book added to cart!");
+        navigate("/cart");
       })
       .catch((error) => {
         console.error("Add to Cart Error:", error);
-        toast.error("Failed to add book to cart");
+        toast.error("You need login to add book to cart");
+        navigate("/login");
       });
   };
 
